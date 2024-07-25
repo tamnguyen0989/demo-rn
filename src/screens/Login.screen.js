@@ -22,7 +22,7 @@ export const LoginScreen = ({ navigation }) => {
   return (
     <SafeArea>
       {isLoading && (
-        <View style={styles.loadingContainer}>
+        <View style={styles.loadingWrapper}>
           <ActivityIndicator>
             style={styles.activityIndicator}
             size={50}
