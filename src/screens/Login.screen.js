@@ -1,25 +1,36 @@
-import React, { useState, useContext } from "react";
-import { View } from "react-native";
-import { Button, TextInput } from "react-native-paper";
+import React, { useState, useContext } from 'react';
+import { View } from 'react-native';
+import { Button, TextInput, ActivityIndicator } from 'react-native-paper';
 
-import { Spacer } from "../component/spacer.component";
-import { SafeArea } from "../component/safe-area.component";
-import { styles } from "./Login.styles";
-import { AuthenticationContext } from "../services/authentication.context";
-import { Typography } from "../component/typography.component";
-import { colors } from "../utils/colors";
+import { Spacer } from '../component/spacer.component';
+import { SafeArea } from '../component/safe-area.component';
+import { styles } from './Login.styles';
+import { AuthenticationContext } from '../services/authentication.context';
+import { Typography } from '../component/typography.component';
+import { colors } from '../utils/colors';
+import { EMAIL, PASS } from '../setup/firebase.setup';
 
 export const LoginScreen = ({ navigation }) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const { onLogin, error } = useContext(AuthenticationContext);
+  const [email, setEmail] = useState(EMAIL);
+  const [password, setPassword] = useState(PASS);
+  const { onLogin, error, isLoading } = useContext(AuthenticationContext);
 
   const navigateAfterLogin = () => {
-    navigation.navigate("Dashboard");
+    navigation.navigate('Dashboard');
   };
 
   return (
     <SafeArea>
+      {isLoading && (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator>
+            style={styles.activityIndicator}
+            size={50}
+            animating={true}
+            color={colors.bg.primary}
+          </ActivityIndicator>
+        </View>
+      )}
       <View style={styles.accountBackground}>
         <View style={styles.accountContainer}>
           <TextInput
@@ -55,9 +66,19 @@ export const LoginScreen = ({ navigation }) => {
               style={styles.authButton}
               icon='lock-open-outline'
               mode='contained'
+              disabled={isLoading ? true : false}
               onPress={() => onLogin(email, password, navigateAfterLogin)}
             >
-              Login
+              {isLoading ? (
+                <ActivityIndicator>
+                  style={styles.activityIndicator}
+                  size={50}
+                  animating={true}
+                  color={colors.bg.primary}
+                </ActivityIndicator>
+              ) : (
+                'Login'
+              )}
             </Button>
           </Spacer>
         </View>
