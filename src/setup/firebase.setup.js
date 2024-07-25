@@ -1,4 +1,11 @@
-import { initializeApp } from 'firebase/app';
+import { initializeApp, getApp } from 'firebase/app';
+import {
+  initializeAuth,
+  getAuth,
+  getReactNativePersistence,
+} from 'firebase/auth';
+import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
+import { Platform } from 'react-native';
 
 export const EMAIL = 'test@titandms.com.au';
 export const PASS = '123456';
@@ -12,4 +19,12 @@ const firebaseConfig = {
   appId: '1:56225294385:web:d35a3a65795b3fc982cd10',
 };
 
-export const app = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
+const auth =
+  Platform.OS !== 'web'
+    ? initializeAuth(app, {
+        persistence: getReactNativePersistence(ReactNativeAsyncStorage),
+      })
+    : getAuth(app);
+
+export { app, auth, getApp, getAuth };
