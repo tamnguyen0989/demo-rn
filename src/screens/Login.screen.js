@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
-import { View } from "react-native";
-import { Button, TextInput, ActivityIndicator } from "react-native-paper";
+import { View, Image, Text } from "react-native";
+import { Button, TextInput } from "react-native-paper";
 
 import { Spacer } from "../component/spacer.component";
 import { SafeArea } from "../component/safe-area.component";
@@ -9,6 +9,7 @@ import { AuthenticationContext } from "../services/authentication.context";
 import { Typography } from "../component/typography.component";
 import { colors } from "../utils/colors";
 import { EMAIL, PASS } from "../setup/firebase.setup";
+import { spacing } from "../utils/spacings";
 
 export const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState(EMAIL);
@@ -22,6 +23,12 @@ export const LoginScreen = ({ navigation }) => {
   return (
     <SafeArea>
       <View style={styles.accountBackground}>
+        <View style={styles.logoWrapper}>
+          <Image
+            source={require("../../assets/titan-logo.png")}
+            style={styles.logo}
+          />
+        </View>
         <View style={styles.accountContainer}>
           <TextInput
             style={styles.authInput}
