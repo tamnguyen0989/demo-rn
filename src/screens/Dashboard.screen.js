@@ -4,6 +4,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { launchCamera } from "react-native-image-picker";
 
 import { SafeArea } from "../component/safe-area.component";
 import { styles } from "./Dashboard.styles";
@@ -25,8 +26,10 @@ export const DashboardScreen = ({ navigation }) => {
   const getPerson = (label) => {
     setClickedNumber(label);
   };
-  const takePhoto = (label) => {
+  const takePhoto = async (label) => {
     setClickedNumber(label);
+    const result = await launchCamera();
+    console.log("...result", result);
   };
   const scanQRCode = (label) => {
     setClickedNumber(label);
