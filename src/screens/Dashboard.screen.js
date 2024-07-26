@@ -1,21 +1,78 @@
-import { useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { SegmentedButtons } from 'react-native-paper';
-import { Ionicons } from '@expo/vector-icons';
+import { useState } from "react";
+import { View, Text, TouchableOpacity } from "react-native";
+import { FontAwesome } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome5 } from "@expo/vector-icons";
 
-import { SafeArea } from '../component/safe-area.component';
-import { spacing } from '../utils/spacings';
-import { colors } from '../utils/colors';
-import { fontSizes } from '../utils/fonts';
+import { SafeArea } from "../component/safe-area.component";
+import { styles } from "./Dashboard.styles";
 
 export const DashboardScreen = () => {
-  const [value, setValue] = useState('');
-
-  const defaultStyleButton = {
-    style: styles.button,
-    checkedColor: colors.text.primary,
-    uncheckedColor: colors.text.primary,
+  const getVehicle = () => {
+    console.log("getVehicle");
   };
+  const getPerson = () => {
+    console.log("getPerson");
+  };
+  const takePhoto = () => {
+    console.log("takePhoto");
+  };
+  const scanQRCode = () => {
+    console.log("scanQRCode");
+  };
+  const signName = () => {
+    console.log("signName");
+  };
+
+  const actionButtons = [
+    {
+      icon: <FontAwesome name='car' size={24} />,
+      label: "Vehicle",
+      onPress: () => getVehicle(),
+    },
+    {
+      icon: <FontAwesome name='user' size={24} />,
+      label: "Person",
+      onPress: () => getPerson(),
+    },
+    {
+      icon: <AntDesign name='camera' size={24} />,
+      label: "Photo",
+      onPress: () => takePhoto(),
+    },
+    {
+      icon: <Ionicons name='scan-circle' size={24} />,
+      label: "Scan",
+      onPress: () => scanQRCode(),
+    },
+    {
+      icon: <FontAwesome5 name='signature' size={23} />,
+      label: "Signature",
+      onPress: () => signName(),
+    },
+  ];
+
+  const renderActionButtons = actionButtons.map(
+    ({ icon, label, onPress }, index) => {
+      const isFirst = index === 0;
+      const isLast = index === actionButtons.length - 1;
+      const styleButton = isFirst
+        ? styles.buttonWrapperFirst
+        : isLast
+        ? styles.buttonWrapperLast
+        : styles.buttonWrapper;
+
+      return (
+        <TouchableOpacity key={label} style={styleButton} onPress={onPress}>
+          <Text>{icon}</Text>
+          <View>
+            <Text style={styles.label}>{label}</Text>
+          </View>
+        </TouchableOpacity>
+      );
+    }
+  );
 
   return (
     <SafeArea>
@@ -23,63 +80,8 @@ export const DashboardScreen = () => {
         <View style={styles.chartWrapper}>
           <Text>Chart</Text>
         </View>
-        <View style={styles.buttonsWrapper}>
-          <SegmentedButtons
-            style={{ fontSize: 50 }}
-            value={value}
-            onValueChange={setValue}
-            buttons={[
-              {
-                ...defaultStyleButton,
-                value: 'camera',
-                icon: 'camera',
-              },
-              {
-                ...defaultStyleButton,
-                value: 'train',
-                label: 'Transit',
-              },
-              {
-                ...defaultStyleButton,
-                value: 'drive',
-                label: 'Driving',
-              },
-              {
-                ...defaultStyleButton,
-                value: 'drive',
-                label: 'Driving',
-              },
-              {
-                ...defaultStyleButton,
-                value: 'drive',
-                label: 'Driving',
-              },
-            ]}
-          />
-        </View>
+        <View style={styles.buttonsGroup}>{renderActionButtons}</View>
       </View>
     </SafeArea>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    padding: spacing.md,
-  },
-  chartWrapper: {},
-  buttonsWrapper: {
-    position: 'absolute',
-    bottom: spacing.lg,
-    flexDirection: 'row',
-    alignItems: 'center',
-    fontSize: 50,
-  },
-  button: {
-    backgroundColor: colors.bg.primary,
-    borderColor: colors.bg.primary,
-    height: 50,
-    justifyContent: 'center',
-  },
-});
