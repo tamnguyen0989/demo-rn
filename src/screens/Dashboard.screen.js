@@ -27,27 +27,27 @@ export const DashboardScreen = () => {
 
   const actionButtons = [
     {
-      icon: <FontAwesome name='car' />,
+      icon: <FontAwesome name='car' size={15} />,
       label: "Vehicle",
       onPress: () => getVehicle(),
     },
     {
-      icon: <FontAwesome name='user' />,
+      icon: <FontAwesome name='user' size={15} />,
       label: "Person",
       onPress: () => getPerson(),
     },
     {
-      icon: <AntDesign name='camera' />,
+      icon: <AntDesign name='camera' size={15} />,
       label: "Photo",
       onPress: () => takePhoto(),
     },
     {
-      icon: <Ionicons name='scan-circle' />,
+      icon: <Ionicons name='scan-circle' size={15} />,
       label: "Scan",
       onPress: () => scanQRCode(),
     },
     {
-      icon: <FontAwesome5 name='signature' />,
+      icon: <FontAwesome5 name='signature' size={15} />,
       label: "Signature",
       onPress: () => signName(),
     },
