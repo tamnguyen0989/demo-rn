@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, Platform } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
@@ -27,27 +27,27 @@ export const DashboardScreen = () => {
 
   const actionButtons = [
     {
-      icon: <FontAwesome name='car' size={24} />,
+      icon: <FontAwesome name='car' />,
       label: "Vehicle",
       onPress: () => getVehicle(),
     },
     {
-      icon: <FontAwesome name='user' size={24} />,
+      icon: <FontAwesome name='user' />,
       label: "Person",
       onPress: () => getPerson(),
     },
     {
-      icon: <AntDesign name='camera' size={24} />,
+      icon: <AntDesign name='camera' />,
       label: "Photo",
       onPress: () => takePhoto(),
     },
     {
-      icon: <Ionicons name='scan-circle' size={24} />,
+      icon: <Ionicons name='scan-circle' />,
       label: "Scan",
       onPress: () => scanQRCode(),
     },
     {
-      icon: <FontAwesome5 name='signature' size={23} />,
+      icon: <FontAwesome5 name='signature' />,
       label: "Signature",
       onPress: () => signName(),
     },

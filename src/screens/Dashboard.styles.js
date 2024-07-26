@@ -1,7 +1,8 @@
-import { StyleSheet } from "react-native";
+import { Platform, StyleSheet } from "react-native";
 
 import { spacing } from "../utils/spacings";
 import { colors } from "../utils/colors";
+import { responsive } from "../utils/responsive";
 
 export const styles = StyleSheet.create({
   container: {
@@ -15,7 +16,12 @@ export const styles = StyleSheet.create({
     bottom: spacing.lg,
     flexDirection: "row",
     alignItems: "center",
-    fontSize: 50,
+    width: "100%",
+    maxWidth: Platform.OS === "web" ? "768px" : "unset",
+    height: 50,
+  },
+  buttonsGroupWeb: {
+    minWidth: responsive.desktop,
   },
   buttonWrapper: {
     flex: 1,
@@ -23,6 +29,7 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: colors.bg.primary,
     padding: spacing.sm,
+    height: "100%",
   },
   buttonWrapperFirst: {
     flex: 1,
@@ -30,6 +37,7 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: colors.bg.primary,
     padding: spacing.sm,
+    height: "100%",
     borderTopLeftRadius: 50,
     borderBottomLeftRadius: 50,
   },
@@ -39,6 +47,7 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: colors.bg.primary,
     padding: spacing.sm,
+    height: "100%",
     borderTopRightRadius: 50,
     borderBottomRightRadius: 50,
   },
