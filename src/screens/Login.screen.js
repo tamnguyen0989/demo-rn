@@ -1,14 +1,14 @@
-import React, { useState, useContext } from 'react';
-import { View } from 'react-native';
-import { Button, TextInput, ActivityIndicator } from 'react-native-paper';
+import React, { useState, useContext } from "react";
+import { View } from "react-native";
+import { Button, TextInput, ActivityIndicator } from "react-native-paper";
 
-import { Spacer } from '../component/spacer.component';
-import { SafeArea } from '../component/safe-area.component';
-import { styles } from './Login.styles';
-import { AuthenticationContext } from '../services/authentication.context';
-import { Typography } from '../component/typography.component';
-import { colors } from '../utils/colors';
-import { EMAIL, PASS } from '../setup/firebase.setup';
+import { Spacer } from "../component/spacer.component";
+import { SafeArea } from "../component/safe-area.component";
+import { styles } from "./Login.styles";
+import { AuthenticationContext } from "../services/authentication.context";
+import { Typography } from "../component/typography.component";
+import { colors } from "../utils/colors";
+import { EMAIL, PASS } from "../setup/firebase.setup";
 
 export const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState(EMAIL);
@@ -16,7 +16,7 @@ export const LoginScreen = ({ navigation }) => {
   const { onLogin, error, isLoading } = useContext(AuthenticationContext);
 
   const navigateAfterLogin = () => {
-    navigation.navigate('Dashboard');
+    navigation.navigate("Dashboard");
   };
 
   return (
@@ -77,7 +77,7 @@ export const LoginScreen = ({ navigation }) => {
                   color={colors.bg.primary}
                 </ActivityIndicator>
               ) : (
-                'Login'
+                "Login"
               )}
             </Button>
           </Spacer>

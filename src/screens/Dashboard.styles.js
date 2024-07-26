@@ -10,7 +10,10 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     padding: spacing.md,
   },
-  chartWrapper: {},
+  chartWrapper: {
+    width: "100%",
+    maxWidth: Platform.OS === "web" ? "768px" : "unset",
+  },
   buttonsGroup: {
     position: "absolute",
     bottom: spacing.lg,
