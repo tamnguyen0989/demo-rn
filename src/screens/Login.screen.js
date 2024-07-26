@@ -21,16 +21,6 @@ export const LoginScreen = ({ navigation }) => {
 
   return (
     <SafeArea>
-      {isLoading && (
-        <View style={styles.loadingWrapper}>
-          <ActivityIndicator>
-            style={styles.activityIndicator}
-            size={50}
-            animating={true}
-            color={colors.bg.primary}
-          </ActivityIndicator>
-        </View>
-      )}
       <View style={styles.accountBackground}>
         <View style={styles.accountContainer}>
           <TextInput
@@ -66,19 +56,11 @@ export const LoginScreen = ({ navigation }) => {
               style={styles.authButton}
               icon='lock-open-outline'
               mode='contained'
+              loading={isLoading ? true : false}
               disabled={isLoading ? true : false}
               onPress={() => onLogin(email, password, navigateAfterLogin)}
             >
-              {isLoading ? (
-                <ActivityIndicator>
-                  style={styles.activityIndicator}
-                  size={50}
-                  animating={true}
-                  color={colors.bg.primary}
-                </ActivityIndicator>
-              ) : (
-                "Login"
-              )}
+              Login
             </Button>
           </Spacer>
         </View>

@@ -8,56 +8,75 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { SafeArea } from "../component/safe-area.component";
 import { styles } from "./Dashboard.styles";
 import XAxisChart from "../component/chart.component";
-import { getClickedNumber } from "../services/clicked.service";
-import { ActivityIndicator } from "react-native-paper";
+import {
+  getClickedNumber,
+  updateClickedNumber,
+} from "../services/clicked.service";
+import { ActivityIndicator, Button } from "react-native-paper";
 
-export const DashboardScreen = () => {
+export const DashboardScreen = ({ navigation }) => {
   const [isLoadingChart, setLoadingChart] = useState(false);
   const [dataChart, setDataChart] = useState([]);
+  const [data, setData] = useState({});
 
-  const getVehicle = () => {
-    console.log("getVehicle");
+  const getVehicle = (label) => {
+    setClickedNumber(label);
   };
-  const getPerson = () => {
-    console.log("getPerson");
+  const getPerson = (label) => {
+    setClickedNumber(label);
   };
-  const takePhoto = () => {
-    console.log("takePhoto");
+  const takePhoto = (label) => {
+    setClickedNumber(label);
   };
-  const scanQRCode = () => {
-    console.log("scanQRCode");
+  const scanQRCode = (label) => {
+    setClickedNumber(label);
   };
-  const signName = () => {
-    console.log("signName");
+  const signName = (label) => {
+    setClickedNumber(label);
+  };
+
+  const LABEL = {
+    vehicle: "Vehicle",
+    person: "Person",
+    photo: "Photo",
+    scan: "Scan",
+    signature: "Signature",
   };
 
   const actionButtons = [
     {
       icon: <FontAwesome name='car' size={15} />,
-      label: "Vehicle",
-      onPress: () => getVehicle(),
+      label: LABEL.vehicle,
+      onPress: () => getVehicle(LABEL.vehicle),
     },
     {
       icon: <FontAwesome name='user' size={15} />,
-      label: "Person",
-      onPress: () => getPerson(),
+      label: LABEL.person,
+      onPress: () => getPerson(LABEL.person),
     },
     {
       icon: <AntDesign name='camera' size={15} />,
-      label: "Photo",
-      onPress: () => takePhoto(),
+      label: LABEL.photo,
+      onPress: () => takePhoto(LABEL.photo),
     },
     {
       icon: <Ionicons name='scan-circle' size={15} />,
-      label: "Scan",
-      onPress: () => scanQRCode(),
+      label: LABEL.scan,
+      onPress: () => scanQRCode(LABEL.scan),
     },
     {
       icon: <FontAwesome5 name='signature' size={15} />,
-      label: "Signature",
-      onPress: () => signName(),
+      label: LABEL.signature,
+      onPress: () => signName(LABEL.signature),
     },
   ];
+
+  const setClickedNumber = async (label) => {
+    const newData = { ...data };
+    newData[label.toLocaleLowerCase()] += 1;
+    await updateClickedNumber(newData);
+    setData(newData);
+  };
 
   const renderActionButtons = actionButtons.map(
     ({ icon, label, onPress }, index) => {
@@ -80,11 +99,6 @@ export const DashboardScreen = () => {
     }
   );
 
-  // useEffect(async () => {
-  //   const clickeds = await getClickedNumber();
-  //   console.log(clickeds);
-  // }, []);
-
   const getDataChart = (clicked) => {
     const result = [];
     actionButtons.forEach(({ label }) => {
@@ -99,6 +113,7 @@ export const DashboardScreen = () => {
       const clickeds = await getClickedNumber();
       const data = getDataChart(clickeds[0]);
       setDataChart(data);
+      setData(clickeds[0]);
       setLoadingChart(false);
     }
 
@@ -108,15 +123,14 @@ export const DashboardScreen = () => {
   return (
     <SafeArea>
       <View style={styles.container}>
+        <View style={styles.logoutButtonWrapper}>
+          <Button mode='elevated' onPress={() => navigation.navigate("Login")}>
+            Logout
+          </Button>
+        </View>
         <View style={styles.chartWrapper}>
           {isLoadingChart ? (
-            <View
-              style={{
-                height: 300,
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
+            <View style={styles.indicatorChartWrapper}>
               <ActivityIndicator size={50} animating={true} />
             </View>
           ) : (

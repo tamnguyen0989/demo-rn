@@ -54,4 +54,15 @@ export const styles = StyleSheet.create({
     borderTopRightRadius: 50,
     borderBottomRightRadius: 50,
   },
+  indicatorChartWrapper: {
+    height: 300,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  logoutButtonWrapper: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    width: "100%",
+    maxWidth: Platform.OS === "web" ? "768px" : "unset",
+  },
 });

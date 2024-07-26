@@ -10,6 +10,7 @@ import { Platform } from "react-native";
 
 export const EMAIL = "test@titandms.com.au";
 export const PASS = "123456";
+export const CLICKED_DOC_ID = "8MgAAhq6VO65oYfXKZvF";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBmMiwcU5LBEVMZIG8QvE2vrXlx4WAKvp8",

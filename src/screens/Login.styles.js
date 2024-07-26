@@ -20,11 +20,6 @@ export const styles = StyleSheet.create({
   authInput: {
     width: 300,
   },
-  loadingWrapper: {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-  },
   activityIndicator: {
     marginLeft: -25,
   },

@@ -1,5 +1,5 @@
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "../setup/firebase.setup";
+import { collection, getDocs, doc, setDoc } from "firebase/firestore";
+import { CLICKED_DOC_ID, db } from "../setup/firebase.setup";
 
 export const getClickedNumber = async () => {
   const result = [];
@@ -8,4 +8,10 @@ export const getClickedNumber = async () => {
     result.push(doc.data());
   });
   return result;
+};
+
+export const updateClickedNumber = async (clicked) => {
+  const docRef = doc(db, "clicked", CLICKED_DOC_ID);
+  const result = await setDoc(docRef, clicked);
+  return !!result;
 };
