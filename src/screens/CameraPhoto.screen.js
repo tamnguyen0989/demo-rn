@@ -48,9 +48,8 @@ export const CameraPhotoScreen = ({ navigation }) => {
         [{ resize: { width: 1024 } }],
         { compress: 0.7 }
       );
-      const result = await uploadFileStorage(uri);
-      console.log('...result', result);
-      // setImage(data.uri);
+      const imageUrl = await uploadFileStorage(uri);
+      navigation.navigate('DashboardScreen', imageUrl);
     }
   };
 

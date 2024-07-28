@@ -14,10 +14,11 @@ import {
 } from '../services/clicked.service';
 import { ActivityIndicator, Button } from 'react-native-paper';
 
-export const DashboardScreen = ({ navigation }) => {
+export const DashboardScreen = ({ navigation, imageUrl }) => {
   const [isLoadingChart, setLoadingChart] = useState(false);
   const [dataChart, setDataChart] = useState([]);
   const [data, setData] = useState({});
+  const [imageData, setImageData] = useState('');
 
   const getVehicle = (label) => {
     setClickedNumber(label);
@@ -121,6 +122,8 @@ export const DashboardScreen = ({ navigation }) => {
     fetchClickedNumber();
   }, []);
 
+  useEffect(() => {}, [imageUrl]);
+
   return (
     <SafeArea>
       <View style={styles.container}>
@@ -137,6 +140,9 @@ export const DashboardScreen = ({ navigation }) => {
           ) : (
             <XAxisChart data={dataChart} />
           )}
+        </View>
+        <View>
+          <Image source={{ uri: restaurant.photos[0] }} />
         </View>
         <View style={styles.buttonsGroup}>{renderActionButtons}</View>
       </View>
