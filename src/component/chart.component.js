@@ -1,7 +1,7 @@
-import React from "react";
-import { BarChart, XAxis, YAxis } from "react-native-svg-charts";
-import { View } from "react-native";
-import * as scale from "d3-scale";
+import React from 'react';
+import { BarChart, XAxis, YAxis } from 'react-native-svg-charts';
+import { View } from 'react-native';
+import * as scale from 'd3-scale';
 
 class XAxisChart extends React.PureComponent {
   constructor() {
@@ -9,7 +9,7 @@ class XAxisChart extends React.PureComponent {
   }
   render() {
     // const data = [14, 80, 100, 55, 33];
-    const dataLabel = ["Vehicle", "Person", "Photo", "Scan", "Signature"];
+    const dataLabel = ['Vehicle', 'Person', 'Photo', 'Scan', 'Signature'];
 
     return (
       <View style={{ height: 300, padding: 20 }}>
@@ -17,14 +17,16 @@ class XAxisChart extends React.PureComponent {
           style={{ flex: 1 }}
           data={this.props.data || []}
           gridMin={0}
-          svg={{ fill: "rgb(134, 65, 244)" }}
+          svg={{ fill: 'rgb(134, 65, 244)' }}
         />
         <XAxis
           style={{ marginTop: 10 }}
           data={this.props.data || []}
           scale={scale.scaleBand}
-          formatLabel={(value, index) => dataLabel[index]}
-          labelStyle={{ color: "black" }}
+          formatLabel={(value, index) =>
+            `${dataLabel[index]}-${this.props.data[index]}`
+          }
+          labelStyle={{ color: 'black' }}
         />
       </View>
     );

@@ -1,19 +1,18 @@
-import { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, Platform } from "react-native";
-import { FontAwesome } from "@expo/vector-icons";
-import { AntDesign } from "@expo/vector-icons";
-import { Ionicons } from "@expo/vector-icons";
-import { FontAwesome5 } from "@expo/vector-icons";
-import { launchCamera } from "react-native-image-picker";
+import { useEffect, useState } from 'react';
+import { View, Text, TouchableOpacity } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
 
-import { SafeArea } from "../component/safe-area.component";
-import { styles } from "./Dashboard.styles";
-import XAxisChart from "../component/chart.component";
+import { SafeArea } from '../component/safe-area.component';
+import { styles } from './Dashboard.styles';
+import XAxisChart from '../component/chart.component';
 import {
   getClickedNumber,
   updateClickedNumber,
-} from "../services/clicked.service";
-import { ActivityIndicator, Button } from "react-native-paper";
+} from '../services/clicked.service';
+import { ActivityIndicator, Button } from 'react-native-paper';
 
 export const DashboardScreen = ({ navigation }) => {
   const [isLoadingChart, setLoadingChart] = useState(false);
@@ -27,9 +26,8 @@ export const DashboardScreen = ({ navigation }) => {
     setClickedNumber(label);
   };
   const takePhoto = async (label) => {
-    setClickedNumber(label);
-    const result = await launchCamera();
-    console.log("...result", result);
+    // setClickedNumber(label);
+    navigation.navigate('CameraPhoto');
   };
   const scanQRCode = (label) => {
     setClickedNumber(label);
@@ -39,11 +37,11 @@ export const DashboardScreen = ({ navigation }) => {
   };
 
   const LABEL = {
-    vehicle: "Vehicle",
-    person: "Person",
-    photo: "Photo",
-    scan: "Scan",
-    signature: "Signature",
+    vehicle: 'Vehicle',
+    person: 'Person',
+    photo: 'Photo',
+    scan: 'Scan',
+    signature: 'Signature',
   };
 
   const actionButtons = [
@@ -127,7 +125,7 @@ export const DashboardScreen = ({ navigation }) => {
     <SafeArea>
       <View style={styles.container}>
         <View style={styles.logoutButtonWrapper}>
-          <Button mode='elevated' onPress={() => navigation.navigate("Login")}>
+          <Button mode='elevated' onPress={() => navigation.navigate('Login')}>
             Logout
           </Button>
         </View>
