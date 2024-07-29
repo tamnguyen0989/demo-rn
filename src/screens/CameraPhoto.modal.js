@@ -1,5 +1,12 @@
 import { useState } from "react";
-import { View, Text, TouchableOpacity, Pressable, Modal } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Pressable,
+  Modal,
+  Platform,
+} from "react-native";
 import { ActivityIndicator, Button } from "react-native-paper";
 import { Camera, CameraType } from "expo-camera/legacy";
 import { manipulateAsync } from "expo-image-manipulator";
@@ -58,7 +65,7 @@ export const CameraPhotoModal = ({
             </Pressable>
           </View>
           <View style={styles.cameraWrapper}>
-            {!permission ? (
+            {!permission || Platform.OS === "web" ? (
               <View style={{ justifyContent: "center", alignItems: "center" }}>
                 <Text>No access to camera</Text>
               </View>
