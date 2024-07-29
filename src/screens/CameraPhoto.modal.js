@@ -1,19 +1,31 @@
 import { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { Button } from 'react-native-paper';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Alert,
+  Pressable,
+  Modal,
+} from 'react-native';
+import { ActivityIndicator, Button } from 'react-native-paper';
 import { Camera, CameraType } from 'expo-camera/legacy';
 import { manipulateAsync } from 'expo-image-manipulator';
 import { MaterialIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 
-import { SafeArea } from '../component/safe-area.component';
 import { spacing } from '../utils/spacings';
 import { uploadFileStorage } from '../services/storage.service';
+import { styles } from './CameraPhoto.styles';
 
-export const CameraPhotoModal = ({ navigation }) => {
+export const CameraPhotoModal = ({
+  isShowModal,
+  onCloseModal,
+  onImageData,
+}) => {
   const [type, setType] = useState(CameraType.back);
   const [permission, requestPermission] = Camera.useCameraPermissions();
   const [camera, setCamera] = useState(null);
+  const [isTaking, setTaking] = useState(false);
 
   if (!permission) {
     // Camera permissions are still loading
@@ -40,6 +52,7 @@ export const CameraPhotoModal = ({ navigation }) => {
 
   const takePicture = async () => {
     if (camera) {
+      setTaking(true);
       const data = await camera.takePictureAsync({
         quality: 0.5,
       });
@@ -48,80 +61,62 @@ export const CameraPhotoModal = ({ navigation }) => {
         [{ resize: { width: 1024 } }],
         { compress: 0.7 }
       );
-      const result = await uploadFileStorage(uri);
-      console.log('...result', result);
-      // setImage(data.uri);
+      const uriRes = await uploadFileStorage(uri);
+      setTaking(false);
+      onImageData(uriRes);
+      onCloseModal();
     }
   };
 
   const onBack = () => {
-    navigation.goBack(null);
+    onCloseModal();
   };
 
   return (
-    <SafeArea>
-      <View style={styles.container}>
-        <View style={{ flexDirection: 'row' }}>
-          <Button mode='elevated' onPress={onBack}>
-            Back
-          </Button>
-        </View>
-        <View style={styles.cameraWrapper}>
-          <Camera
-            style={styles.camera}
-            type={type}
-            ref={(ref) => setCamera(ref)}
-          >
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={toggleCameraType}
-              >
-                {/* <Text style={styles.text}>Flip</Text> */}
-                <MaterialIcons
-                  name='flip-camera-android'
-                  size={24}
-                  color='white'
-                />
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.button} onPress={takePicture}>
-                {/* <Text style={styles.text}>Take</Text> */}
-                <AntDesign name='camera' size={24} color='white' />
-              </TouchableOpacity>
-            </View>
-          </Camera>
+    <Modal animationType='fade' transparent={true} visible={isShowModal}>
+      <View style={styles.centeredView}>
+        <View style={styles.modalView}>
+          <View style={styles.backWrapper}>
+            <Pressable style={{ margin: spacing.md }} onPress={onBack}>
+              <AntDesign name='left' size={20} color='black' />
+            </Pressable>
+          </View>
+          <View style={styles.cameraWrapper}>
+            <Camera
+              style={styles.camera}
+              type={type}
+              ref={(ref) => setCamera(ref)}
+            >
+              <View style={styles.buttonContainer}>
+                {isTaking ? (
+                  <View style={styles.indicator}>
+                    <ActivityIndicator color='white' />
+                  </View>
+                ) : (
+                  <>
+                    <TouchableOpacity
+                      style={styles.button}
+                      onPress={toggleCameraType}
+                    >
+                      <MaterialIcons
+                        name='flip-camera-android'
+                        size={24}
+                        color='white'
+                      />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.button}
+                      onPress={takePicture}
+                    >
+                      <AntDesign name='camera' size={24} color='white' />
+                    </TouchableOpacity>
+                  </>
+                )}
+              </View>
+            </Camera>
+          </View>
         </View>
       </View>
-    </SafeArea>
+    </Modal>
   );
 };
-
-export const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: spacing.sm,
-  },
-  cameraWrapper: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  camera: {
-    flex: 0.6,
-  },
-  buttonContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    backgroundColor: 'transparent',
-    margin: 64,
-  },
-  button: {
-    flex: 1,
-    alignSelf: 'flex-end',
-    alignItems: 'center',
-  },
-  text: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: 'white',
-  },
-});

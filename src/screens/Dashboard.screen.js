@@ -1,12 +1,5 @@
 import { useEffect, useState } from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Alert,
-  Pressable,
-  Modal,
-} from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
@@ -20,12 +13,17 @@ import {
   updateClickedNumber,
 } from '../services/clicked.service';
 import { ActivityIndicator, Button } from 'react-native-paper';
+import { CameraPhotoModal } from './CameraPhoto.modal';
+import { HeroImage } from '../component/hero-image.component';
+import { FILE_URL, getFileStorage } from '../services/storage.service';
 
-export const DashboardScreen = ({ navigation }) => {
+export const DashboardScreen = ({ navigation, imageUrl }) => {
   const [isLoadingChart, setLoadingChart] = useState(false);
   const [dataChart, setDataChart] = useState([]);
   const [data, setData] = useState({});
-  const [modalVisible, setModalVisible] = useState(false);
+  const [imageData, setImageData] = useState('');
+  const [isShowModal, setShowModal] = useState(false);
+  const [isLoadingImage, setLoadingImage] = useState(false);
 
   const getVehicle = (label) => {
     setClickedNumber(label);
@@ -34,9 +32,8 @@ export const DashboardScreen = ({ navigation }) => {
     setClickedNumber(label);
   };
   const takePhoto = async (label) => {
-    // setClickedNumber(label);
-    // navigation.navigate('CameraPhoto');
-    setModalVisible(true);
+    setClickedNumber(label);
+    setShowModal(true);
   };
   const scanQRCode = (label) => {
     setClickedNumber(label);
@@ -126,55 +123,44 @@ export const DashboardScreen = ({ navigation }) => {
       setData(clickeds[0]);
       setLoadingChart(false);
     }
+    async function fetchFile() {
+      setLoadingImage(true);
+      const result = await getFileStorage();
+      setLoadingImage(false);
+      if (result) setImageData(FILE_URL);
+    }
 
     fetchClickedNumber();
+    fetchFile();
   }, []);
 
+  useEffect(() => {}, [imageUrl]);
+
   return (
-    <>
-      <SafeArea>
-        <View style={styles.container}>
-          <View style={styles.logoutButtonWrapper}>
-            <Button
-              mode='elevated'
-              onPress={() => navigation.navigate('Login')}
-            >
-              Logout
-            </Button>
-          </View>
-          <View style={styles.chartWrapper}>
-            {isLoadingChart ? (
-              <View style={styles.indicatorChartWrapper}>
-                <ActivityIndicator size={50} animating={true} />
-              </View>
-            ) : (
-              <XAxisChart data={dataChart} />
-            )}
-          </View>
-          <View style={styles.buttonsGroup}>{renderActionButtons}</View>
+    <SafeArea>
+      <View style={styles.container}>
+        <View style={styles.logoutButtonWrapper}>
+          <Button mode='elevated' onPress={() => navigation.navigate('Login')}>
+            Logout
+          </Button>
         </View>
-        <Modal
-          animationType='fade'
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-            Alert.alert('Modal has been closed.');
-            setModalVisible(!modalVisible);
-          }}
-        >
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <Text style={styles.modalText}>Hello World!</Text>
-              <Pressable
-                style={[styles.button, styles.buttonClose]}
-                onPress={() => setModalVisible(!modalVisible)}
-              >
-                <Text style={styles.textStyle}>Hide Modal</Text>
-              </Pressable>
+        <View style={styles.chartWrapper}>
+          {isLoadingChart ? (
+            <View style={styles.indicatorChartWrapper}>
+              <ActivityIndicator size={50} animating={true} />
             </View>
-          </View>
-        </Modal>
-      </SafeArea>
-    </>
+          ) : (
+            <XAxisChart data={dataChart} />
+          )}
+        </View>
+        <View style={styles.buttonsGroup}>{renderActionButtons}</View>
+        <HeroImage imageData={imageData} isLoadingImage={isLoadingImage} />
+      </View>
+      <CameraPhotoModal
+        isShowModal={isShowModal}
+        onCloseModal={() => setShowModal(false)}
+        onImageData={(uri) => setImageData(uri)}
+      />
+    </SafeArea>
   );
 };

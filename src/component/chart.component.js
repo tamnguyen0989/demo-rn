@@ -24,7 +24,7 @@ class XAxisChart extends React.PureComponent {
           data={this.props.data || []}
           scale={scale.scaleBand}
           formatLabel={(value, index) =>
-            `${dataLabel[index]}-${this.props.data[index]}`
+            `${dataLabel[index]} ${this.props.data[index]}`
           }
           labelStyle={{ color: 'black' }}
         />
