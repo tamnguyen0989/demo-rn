@@ -10,12 +10,14 @@ import { styles } from "./Dashboard.styles";
 import XAxisChart from "../component/chart.component";
 import {
   getClickedNumber,
+  initData,
   updateClickedNumber,
 } from "../services/clicked.service";
 import { ActivityIndicator, Button } from "react-native-paper";
 import { CameraPhotoModal } from "./CameraPhoto.modal";
 import { HeroImage } from "../component/hero-image.component";
 import { FILE_URL, getFileStorage } from "../services/storage.service";
+import * as SQLite from "expo-sqlite";
 
 export const DashboardScreen = ({ navigation, imageUrl }) => {
   const [isLoadingChart, setLoadingChart] = useState(false);
@@ -24,6 +26,8 @@ export const DashboardScreen = ({ navigation, imageUrl }) => {
   const [imageData, setImageData] = useState("");
   const [isShowModal, setShowModal] = useState(false);
   const [isLoadingImage, setLoadingImage] = useState(false);
+
+  const db = SQLite.openDatabase("demo.db");
 
   const getVehicle = (label) => {
     setClickedNumber(label);
@@ -115,26 +119,35 @@ export const DashboardScreen = ({ navigation, imageUrl }) => {
   };
 
   useEffect(() => {
-    async function fetchClickedNumber() {
-      setLoadingChart(true);
-      const clickeds = await getClickedNumber();
+    // async function fetchClickedNumber() {
+    //   setLoadingChart(true);
+    //   const clickeds = await getClickedNumber();
+    //   const data = getDataChart(clickeds[0]);
+    //   setDataChart(data);
+    //   setData(clickeds[0]);
+    //   setLoadingChart(false);
+    // }
+    // async function fetchFile() {
+    //   setLoadingImage(true);
+    //   const result = await getFileStorage();
+    //   setLoadingImage(false);
+    //   if (result) setImageData(FILE_URL);
+    // }
+    // fetchClickedNumber();
+    // fetchFile();
+
+    function onGetClickedNumber(clickeds) {
       const data = getDataChart(clickeds[0]);
       setDataChart(data);
       setData(clickeds[0]);
       setLoadingChart(false);
     }
-    async function fetchFile() {
-      setLoadingImage(true);
-      const result = await getFileStorage();
-      setLoadingImage(false);
-      if (result) setImageData(FILE_URL);
-    }
 
-    fetchClickedNumber();
-    fetchFile();
+    initData(db);
+
+    setLoadingChart(true);
+    getClickedNumber(db, onGetClickedNumber);
   }, []);
-
-  useEffect(() => {}, [imageUrl]);
 
   return (
     <SafeArea>
