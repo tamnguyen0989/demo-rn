@@ -1,21 +1,14 @@
-import { useState } from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Alert,
-  Pressable,
-  Modal,
-} from 'react-native';
-import { ActivityIndicator, Button } from 'react-native-paper';
-import { Camera, CameraType } from 'expo-camera/legacy';
-import { manipulateAsync } from 'expo-image-manipulator';
-import { MaterialIcons } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons';
+import { useState } from "react";
+import { View, Text, TouchableOpacity, Pressable, Modal } from "react-native";
+import { ActivityIndicator, Button } from "react-native-paper";
+import { Camera, CameraType } from "expo-camera/legacy";
+import { manipulateAsync } from "expo-image-manipulator";
+import { MaterialIcons } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 
-import { spacing } from '../utils/spacings';
-import { uploadFileStorage } from '../services/storage.service';
-import { styles } from './CameraPhoto.styles';
+import { spacing } from "../utils/spacings";
+import { uploadFileStorage } from "../services/storage.service";
+import { styles } from "./CameraPhoto.styles";
 
 export const CameraPhotoModal = ({
   isShowModal,
@@ -26,23 +19,6 @@ export const CameraPhotoModal = ({
   const [permission, requestPermission] = Camera.useCameraPermissions();
   const [camera, setCamera] = useState(null);
   const [isTaking, setTaking] = useState(false);
-
-  if (!permission) {
-    // Camera permissions are still loading
-    return <View />;
-  }
-
-  if (!permission.granted) {
-    // Camera permissions are not granted yet
-    return (
-      <View style={styles.container}>
-        <Text style={{ textAlign: 'center' }}>
-          We need your permission to show the camera
-        </Text>
-        <Button onPress={requestPermission} title='grant permission' />
-      </View>
-    );
-  }
 
   function toggleCameraType() {
     setType((current) =>
@@ -82,38 +58,53 @@ export const CameraPhotoModal = ({
             </Pressable>
           </View>
           <View style={styles.cameraWrapper}>
-            <Camera
-              style={styles.camera}
-              type={type}
-              ref={(ref) => setCamera(ref)}
-            >
-              <View style={styles.buttonContainer}>
-                {isTaking ? (
-                  <View style={styles.indicator}>
-                    <ActivityIndicator color='white' />
-                  </View>
-                ) : (
-                  <>
-                    <TouchableOpacity
-                      style={styles.button}
-                      onPress={toggleCameraType}
-                    >
-                      <MaterialIcons
-                        name='flip-camera-android'
-                        size={24}
-                        color='white'
-                      />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={styles.button}
-                      onPress={takePicture}
-                    >
-                      <AntDesign name='camera' size={24} color='white' />
-                    </TouchableOpacity>
-                  </>
-                )}
+            {!permission ? (
+              <View style={{ justifyContent: "center", alignItems: "center" }}>
+                <Text>No access to camera</Text>
               </View>
-            </Camera>
+            ) : !permission.granted ? (
+              <View style={{ justifyContent: "center", alignItems: "center" }}>
+                <Text style={{ textAlign: "center", marginBottom: spacing.md }}>
+                  We need your permission to show the camera
+                </Text>
+                <Button mode='elevated' onPress={requestPermission}>
+                  Grant permission
+                </Button>
+              </View>
+            ) : (
+              <Camera
+                style={styles.camera}
+                type={type}
+                ref={(ref) => setCamera(ref)}
+              >
+                <View style={styles.buttonContainer}>
+                  {isTaking ? (
+                    <View style={styles.indicator}>
+                      <ActivityIndicator color='white' />
+                    </View>
+                  ) : (
+                    <>
+                      <TouchableOpacity
+                        style={styles.button}
+                        onPress={toggleCameraType}
+                      >
+                        <MaterialIcons
+                          name='flip-camera-android'
+                          size={24}
+                          color='white'
+                        />
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={styles.button}
+                        onPress={takePicture}
+                      >
+                        <AntDesign name='camera' size={24} color='white' />
+                      </TouchableOpacity>
+                    </>
+                  )}
+                </View>
+              </Camera>
+            )}
           </View>
         </View>
       </View>

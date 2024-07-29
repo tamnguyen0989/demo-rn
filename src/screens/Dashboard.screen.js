@@ -1,27 +1,27 @@
-import { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons';
-import { Ionicons } from '@expo/vector-icons';
-import { FontAwesome5 } from '@expo/vector-icons';
+import { useEffect, useState } from "react";
+import { View, Text, TouchableOpacity } from "react-native";
+import { FontAwesome } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome5 } from "@expo/vector-icons";
 
-import { SafeArea } from '../component/safe-area.component';
-import { styles } from './Dashboard.styles';
-import XAxisChart from '../component/chart.component';
+import { SafeArea } from "../component/safe-area.component";
+import { styles } from "./Dashboard.styles";
+import XAxisChart from "../component/chart.component";
 import {
   getClickedNumber,
   updateClickedNumber,
-} from '../services/clicked.service';
-import { ActivityIndicator, Button } from 'react-native-paper';
-import { CameraPhotoModal } from './CameraPhoto.modal';
-import { HeroImage } from '../component/hero-image.component';
-import { FILE_URL, getFileStorage } from '../services/storage.service';
+} from "../services/clicked.service";
+import { ActivityIndicator, Button } from "react-native-paper";
+import { CameraPhotoModal } from "./CameraPhoto.modal";
+import { HeroImage } from "../component/hero-image.component";
+import { FILE_URL, getFileStorage } from "../services/storage.service";
 
 export const DashboardScreen = ({ navigation, imageUrl }) => {
   const [isLoadingChart, setLoadingChart] = useState(false);
   const [dataChart, setDataChart] = useState([]);
   const [data, setData] = useState({});
-  const [imageData, setImageData] = useState('');
+  const [imageData, setImageData] = useState("");
   const [isShowModal, setShowModal] = useState(false);
   const [isLoadingImage, setLoadingImage] = useState(false);
 
@@ -43,11 +43,11 @@ export const DashboardScreen = ({ navigation, imageUrl }) => {
   };
 
   const LABEL = {
-    vehicle: 'Vehicle',
-    person: 'Person',
-    photo: 'Photo',
-    scan: 'Scan',
-    signature: 'Signature',
+    vehicle: "Vehicle",
+    person: "Person",
+    photo: "Photo",
+    scan: "Scan",
+    signature: "Signature",
   };
 
   const actionButtons = [
@@ -140,7 +140,7 @@ export const DashboardScreen = ({ navigation, imageUrl }) => {
     <SafeArea>
       <View style={styles.container}>
         <View style={styles.logoutButtonWrapper}>
-          <Button mode='elevated' onPress={() => navigation.navigate('Login')}>
+          <Button mode='elevated' onPress={() => navigation.navigate("Login")}>
             Logout
           </Button>
         </View>
