@@ -1,33 +1,33 @@
-import { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
-import { FontAwesome } from "@expo/vector-icons";
-import { AntDesign } from "@expo/vector-icons";
-import { Ionicons } from "@expo/vector-icons";
-import { FontAwesome5 } from "@expo/vector-icons";
+import { useEffect, useState } from 'react';
+import { View, Text, TouchableOpacity } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
 
-import { SafeArea } from "../component/safe-area.component";
-import { styles } from "./Dashboard.styles";
-import XAxisChart from "../component/chart.component";
+import { SafeArea } from '../component/safe-area.component';
+import { styles } from './Dashboard.styles';
+import XAxisChart from '../component/chart.component';
 import {
   getClickedNumber,
   initData,
   updateClickedNumber,
-} from "../services/clicked.service";
-import { ActivityIndicator, Button } from "react-native-paper";
-import { CameraPhotoModal } from "./CameraPhoto.modal";
-import { HeroImage } from "../component/hero-image.component";
-import { FILE_URL, getFileStorage } from "../services/storage.service";
-import * as SQLite from "expo-sqlite";
+} from '../services/clicked.service';
+import { ActivityIndicator, Button } from 'react-native-paper';
+import { CameraPhotoModal } from './CameraPhoto.modal';
+import { HeroImage } from '../component/hero-image.component';
+import { FILE_URL, getFileStorage } from '../services/storage.service';
+import * as SQLite from 'expo-sqlite';
 
 export const DashboardScreen = ({ navigation, imageUrl }) => {
   const [isLoadingChart, setLoadingChart] = useState(false);
   const [dataChart, setDataChart] = useState([]);
   const [data, setData] = useState({});
-  const [imageData, setImageData] = useState("");
+  const [imageData, setImageData] = useState('');
   const [isShowModal, setShowModal] = useState(false);
   const [isLoadingImage, setLoadingImage] = useState(false);
 
-  const db = SQLite.openDatabase("demo.db");
+  const db = SQLite.openDatabase('demo.db');
 
   const getVehicle = (label) => {
     setClickedNumber(label);
@@ -47,11 +47,11 @@ export const DashboardScreen = ({ navigation, imageUrl }) => {
   };
 
   const LABEL = {
-    vehicle: "Vehicle",
-    person: "Person",
-    photo: "Photo",
-    scan: "Scan",
-    signature: "Signature",
+    vehicle: 'Vehicle',
+    person: 'Person',
+    photo: 'Photo',
+    scan: 'Scan',
+    signature: 'Signature',
   };
 
   const actionButtons = [
@@ -85,8 +85,12 @@ export const DashboardScreen = ({ navigation, imageUrl }) => {
   const setClickedNumber = async (label) => {
     const newData = { ...data };
     newData[label.toLocaleLowerCase()] += 1;
-    await updateClickedNumber(newData);
     setData(newData);
+    const newDataChard = getDataChart(newData);
+    setDataChart(newDataChard);
+    updateClickedNumber(db, newData);
+
+    getClickedNumber(db);
   };
 
   const renderActionButtons = actionButtons.map(
@@ -140,20 +144,24 @@ export const DashboardScreen = ({ navigation, imageUrl }) => {
       const data = getDataChart(clickeds[0]);
       setDataChart(data);
       setData(clickeds[0]);
-      setLoadingChart(false);
     }
 
     initData(db);
 
     setLoadingChart(true);
     getClickedNumber(db, onGetClickedNumber);
+    setLoadingChart(false);
+
+    return () => {
+      db.closeSync();
+    };
   }, []);
 
   return (
     <SafeArea>
       <View style={styles.container}>
         <View style={styles.logoutButtonWrapper}>
-          <Button mode='elevated' onPress={() => navigation.navigate("Login")}>
+          <Button mode='elevated' onPress={() => navigation.navigate('Login')}>
             Logout
           </Button>
         </View>

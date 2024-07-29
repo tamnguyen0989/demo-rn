@@ -1,6 +1,6 @@
-import { collection, getDocs, doc, setDoc } from "firebase/firestore";
-import { CLICKED_DOC_ID, db } from "../setup/firebase.setup";
-import { tbClicked } from "./constants";
+import { collection, getDocs, doc, setDoc } from 'firebase/firestore';
+import { CLICKED_DOC_ID, db } from '../setup/firebase.setup';
+import { tbClicked } from './constants';
 
 // export const updateClickedNumber = async (clicked) => {
 //   const docRef = doc(db, "clicked", CLICKED_DOC_ID);
@@ -28,7 +28,18 @@ export const initData = (db) => {
 export const getClickedNumber = (db, onResolve) => {
   db.transaction((tx) => {
     tx.executeSql(`SELECT * FROM ${tbClicked}`, null, (txObj, res) => {
-      onResolve(res.rows._array);
+      console.log('...res.rows._array', res.rows._array);
+      onResolve && onResolve(res.rows._array);
     });
+  });
+};
+
+export const updateClickedNumber = async (db, clicked) => {
+  const { id, person, photo, scan, signature, vehicle } = clicked;
+  db.transaction((tx) => {
+    tx.executeSql(
+      `UPDATE ${tbClicked} SET person = ?, photo = ?, scan = ?, signature = ?, vehicle = ? WHERE id = ? `,
+      [person, photo, scan, signature, vehicle, id]
+    );
   });
 };
