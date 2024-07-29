@@ -123,21 +123,13 @@ export const DashboardScreen = ({ navigation, imageUrl }) => {
   };
 
   useEffect(() => {
-    // async function fetchClickedNumber() {
-    //   setLoadingChart(true);
-    //   const clickeds = await getClickedNumber();
-    //   const data = getDataChart(clickeds[0]);
-    //   setDataChart(data);
-    //   setData(clickeds[0]);
-    //   setLoadingChart(false);
-    // }
     // async function fetchFile() {
     //   setLoadingImage(true);
     //   const result = await getFileStorage();
     //   setLoadingImage(false);
     //   if (result) setImageData(FILE_URL);
     // }
-    // fetchClickedNumber();
+
     // fetchFile();
 
     function onGetClickedNumber(clickeds) {
