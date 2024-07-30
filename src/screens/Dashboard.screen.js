@@ -1,33 +1,33 @@
-import { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons';
-import { Ionicons } from '@expo/vector-icons';
-import { FontAwesome5 } from '@expo/vector-icons';
+import { useEffect, useState } from "react";
+import { View, Text, TouchableOpacity } from "react-native";
+import { FontAwesome } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome5 } from "@expo/vector-icons";
 
-import { SafeArea } from '../component/safe-area.component';
-import { styles } from './Dashboard.styles';
-import XAxisChart from '../component/chart.component';
+import { SafeArea } from "../component/safe-area.component";
+import { styles } from "./Dashboard.styles";
+import XAxisChart from "../component/chart.component";
 import {
   getClickedNumber,
   initData,
   updateClickedNumber,
-} from '../services/clicked.service';
-import { ActivityIndicator, Button } from 'react-native-paper';
-import { CameraPhotoModal } from './CameraPhoto.modal';
-import { HeroImage } from '../component/hero-image.component';
-import { FILE_URL, getFileStorage } from '../services/storage.service';
-import * as SQLite from 'expo-sqlite';
+} from "../services/clicked.service";
+import { ActivityIndicator, Button } from "react-native-paper";
+import { CameraPhotoModal } from "./CameraPhoto.modal";
+import { HeroImage } from "../component/hero-image.component";
+import { getFiles } from "../services/storage.service";
+import * as SQLite from "expo-sqlite";
 
 export const DashboardScreen = ({ navigation, imageUrl }) => {
   const [isLoadingChart, setLoadingChart] = useState(false);
   const [dataChart, setDataChart] = useState([]);
   const [data, setData] = useState({});
-  const [imageData, setImageData] = useState('');
+  const [imageData, setImageData] = useState("");
   const [isShowModal, setShowModal] = useState(false);
   const [isLoadingImage, setLoadingImage] = useState(false);
 
-  const db = SQLite.openDatabase('demo.db');
+  const db = SQLite.openDatabase("demo.db");
 
   const getVehicle = (label) => {
     setClickedNumber(label);
@@ -47,11 +47,11 @@ export const DashboardScreen = ({ navigation, imageUrl }) => {
   };
 
   const LABEL = {
-    vehicle: 'Vehicle',
-    person: 'Person',
-    photo: 'Photo',
-    scan: 'Scan',
-    signature: 'Signature',
+    vehicle: "Vehicle",
+    person: "Person",
+    photo: "Photo",
+    scan: "Scan",
+    signature: "Signature",
   };
 
   const actionButtons = [
@@ -123,19 +123,13 @@ export const DashboardScreen = ({ navigation, imageUrl }) => {
   };
 
   useEffect(() => {
-    // async function fetchFile() {
-    //   setLoadingImage(true);
-    //   const result = await getFileStorage();
-    //   setLoadingImage(false);
-    //   if (result) setImageData(FILE_URL);
-    // }
-
-    // fetchFile();
-
     function onGetClickedNumber(clickeds) {
       const data = getDataChart(clickeds[0]);
       setDataChart(data);
       setData(clickeds[0]);
+    }
+    function onGetfiles(files) {
+      if (files.length) setImageData(files[0]);
     }
 
     initData(db);
@@ -143,6 +137,10 @@ export const DashboardScreen = ({ navigation, imageUrl }) => {
     setLoadingChart(true);
     getClickedNumber(db, onGetClickedNumber);
     setLoadingChart(false);
+
+    setLoadingImage(true);
+    getFiles(db, onGetfiles);
+    setLoadingImage(false);
 
     return () => {
       db.closeSync();
@@ -153,7 +151,7 @@ export const DashboardScreen = ({ navigation, imageUrl }) => {
     <SafeArea>
       <View style={styles.container}>
         <View style={styles.logoutButtonWrapper}>
-          <Button mode='elevated' onPress={() => navigation.navigate('Login')}>
+          <Button mode='elevated' onPress={() => navigation.navigate("Login")}>
             Logout
           </Button>
         </View>
@@ -171,8 +169,10 @@ export const DashboardScreen = ({ navigation, imageUrl }) => {
       </View>
       <CameraPhotoModal
         isShowModal={isShowModal}
+        imageData={imageData}
         onCloseModal={() => setShowModal(false)}
-        onImageData={(uri) => setImageData(uri)}
+        onImageData={(newImageData) => setImageData(newImageData)}
+        db={db}
       />
     </SafeArea>
   );

@@ -1,4 +1,4 @@
-import { tbClicked } from './constants';
+import { tbClicked, tbUploaded } from "./constants";
 
 export const initData = (db) => {
   db.transaction((tx) => {
@@ -6,13 +6,24 @@ export const initData = (db) => {
       CREATE TABLE IF NOT EXISTS ${tbClicked} (id INTEGER PRIMARY KEY AUTOINCREMENT, person INTEGER, photo INTEGER, scan INTEGER, signature INTEGER, vehicle INTEGER)
       `);
   });
-
   db.transaction((tx) => {
     tx.executeSql(`SELECT * FROM ${tbClicked}`, null, (txObj, result) => {
       if (result.rows._array.length === 0)
         tx.executeSql(
           `INSERT INTO ${tbClicked} (person, photo, scan, signature, vehicle) VALUES (1, 10, 25, 6, 3)`
         );
+    });
+  });
+
+  db.transaction((tx) => {
+    tx.executeSql(
+      `CREATE TABLE IF NOT EXISTS ${tbUploaded} (id INTEGER PRIMARY KEY AUTOINCREMENT, uri TEXT)`
+    );
+  });
+  db.transaction((tx) => {
+    tx.executeSql(`SELECT * FROM ${tbUploaded}`, null, (txObj, result) => {
+      if (result.rows._array.length === 0)
+        tx.executeSql(`INSERT INTO ${tbUploaded} (uri) VALUES ('test')`);
     });
   });
 };

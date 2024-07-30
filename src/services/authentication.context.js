@@ -12,6 +12,7 @@ export const AuthenticationContextProvider = ({ children }) => {
   const onLogin = (email, password, onResolve) => {
     setIsLoading(true);
     if (!email || !password) return;
+    setIsLoading(false);
     onResolve && onResolve();
   };
 
