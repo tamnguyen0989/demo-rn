@@ -1,4 +1,4 @@
-import { tbUploaded } from "./constants";
+import { tbUploaded } from "../constants/sqlite.constants";
 
 export const getFiles = (db, onResolve) => {
   db.transaction((tx) => {

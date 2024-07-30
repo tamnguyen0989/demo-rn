@@ -16,7 +16,7 @@ export const HeroImage = ({ imageData, isLoadingImage }) => {
     >
       {isLoadingImage ? (
         <ActivityIndicator size={50} />
-      ) : imageData ? (
+      ) : imageData?.uri?.length ? (
         <Image
           source={{ uri: imageData.uri }}
           style={{ width: "100%", height: "100%" }}
