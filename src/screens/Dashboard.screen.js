@@ -18,6 +18,10 @@ import { CameraPhotoModal } from "./CameraPhoto.modal";
 import { HeroImage } from "../component/hero-image.component";
 import { getFiles } from "../services/storage.service";
 import * as SQLite from "expo-sqlite";
+import { AppDataSource } from "../typeorm/data-source";
+import { User } from "../typeorm/entity/User";
+import { getDataSource } from "../typeorm/index";
+import { Clicked } from "../typeorm/entity/Clicked";
 
 export const DashboardScreen = ({ navigation, imageUrl }) => {
   const [isLoadingChart, setLoadingChart] = useState(false);
@@ -26,8 +30,6 @@ export const DashboardScreen = ({ navigation, imageUrl }) => {
   const [imageData, setImageData] = useState("");
   const [isShowModal, setShowModal] = useState(false);
   const [isLoadingImage, setLoadingImage] = useState(false);
-
-  const db = SQLite.openDatabase("demo.db");
 
   const getVehicle = (label) => {
     setClickedNumber(label);
@@ -82,15 +84,13 @@ export const DashboardScreen = ({ navigation, imageUrl }) => {
     },
   ];
 
-  const setClickedNumber = async (label) => {
+  const setClickedNumber = (label) => {
     const newData = { ...data };
     newData[label.toLocaleLowerCase()] += 1;
     setData(newData);
+    updateClickedNumber(newData);
     const newDataChard = getDataChart(newData);
     setDataChart(newDataChard);
-    updateClickedNumber(db, newData);
-
-    getClickedNumber(db);
   };
 
   const renderActionButtons = actionButtons.map(
@@ -123,28 +123,35 @@ export const DashboardScreen = ({ navigation, imageUrl }) => {
   };
 
   useEffect(() => {
-    function onGetClickedNumber(clickeds) {
+    // function onGetClickedNumber(clickeds) {
+    //   const data = getDataChart(clickeds[0]);
+    //   setDataChart(data);
+    //   setData(clickeds[0]);
+    // }
+    // function onGetfiles(files) {
+    //   if (files.length) setImageData(files[0]);
+    // }
+    // initData(db);
+    // setLoadingChart(true);
+    // getClickedNumber(db, onGetClickedNumber);
+    // setLoadingChart(false);
+    // setLoadingImage(true);
+    // getFiles(db, onGetfiles);
+    // setLoadingImage(false);
+    // return () => {
+    //   db.closeSync();
+    // };
+
+    async function getClickeds() {
+      setLoadingChart(true);
+      const clickeds = await getClickedNumber();
       const data = getDataChart(clickeds[0]);
       setDataChart(data);
       setData(clickeds[0]);
-    }
-    function onGetfiles(files) {
-      if (files.length) setImageData(files[0]);
+      setLoadingChart(false);
     }
 
-    initData(db);
-
-    setLoadingChart(true);
-    getClickedNumber(db, onGetClickedNumber);
-    setLoadingChart(false);
-
-    setLoadingImage(true);
-    getFiles(db, onGetfiles);
-    setLoadingImage(false);
-
-    return () => {
-      db.closeSync();
-    };
+    getClickeds();
   }, []);
 
   return (
@@ -172,7 +179,6 @@ export const DashboardScreen = ({ navigation, imageUrl }) => {
         imageData={imageData}
         onCloseModal={() => setShowModal(false)}
         onImageData={(newImageData) => setImageData(newImageData)}
-        db={db}
       />
     </SafeArea>
   );

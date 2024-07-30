@@ -1,4 +1,6 @@
 import { tbClicked, tbUploaded } from "../constants/sqlite.constants";
+import { getDataSource } from "../typeorm";
+import { Clicked } from "../typeorm/entity/Clicked";
 
 export const initData = (db) => {
   db.transaction((tx) => {
@@ -28,20 +30,20 @@ export const initData = (db) => {
   });
 };
 
-export const getClickedNumber = (db, onResolve) => {
-  db.transaction((tx) => {
-    tx.executeSql(`SELECT * FROM ${tbClicked}`, null, (txObj, res) => {
-      onResolve && onResolve(res.rows._array);
-    });
-  });
+export const getClickedNumber = async () => {
+  const AppDataSource = await getDataSource();
+  const clickedRepo = AppDataSource.getRepository(Clicked);
+  return await clickedRepo.find();
 };
 
-export const updateClickedNumber = async (db, clicked) => {
-  const { id, person, photo, scan, signature, vehicle } = clicked;
-  db.transaction((tx) => {
-    tx.executeSql(
-      `UPDATE ${tbClicked} SET person = ?, photo = ?, scan = ?, signature = ?, vehicle = ? WHERE id = ? `,
-      [person, photo, scan, signature, vehicle, id]
-    );
-  });
+export const createClicked = async (clicked) => {
+  const AppDataSource = await getDataSource();
+  const clickedRepo = AppDataSource.getRepository(Clicked);
+  return await clickedRepo.save(clicked);
+};
+
+export const updateClickedNumber = async (clicked) => {
+  const AppDataSource = await getDataSource();
+  const clickedRepo = AppDataSource.getRepository(Clicked);
+  return await clickedRepo.save(clicked);
 };
