@@ -14,15 +14,14 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 
 import { spacing } from "../utils/spacings";
-import { uploadFile } from "../services/storage.service";
 import { styles } from "./CameraPhoto.styles";
+import { uploadFile } from "../services/uploaded.service";
 
 export const CameraPhotoModal = ({
   isShowModal,
   onCloseModal,
   onImageData,
   imageData,
-  db,
 }) => {
   const [type, setType] = useState(CameraType.back);
   const [permission, requestPermission] = Camera.useCameraPermissions();
@@ -50,7 +49,7 @@ export const CameraPhotoModal = ({
         ...imageData,
         uri,
       };
-      uploadFile(db, newImageData);
+      uploadFile(newImageData);
       setTaking(false);
       onImageData(newImageData);
       onCloseModal();

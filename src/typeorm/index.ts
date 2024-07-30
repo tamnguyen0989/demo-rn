@@ -1,7 +1,7 @@
 import { createClicked, getClickedNumber } from "../services/clicked.service";
 import { AppDataSource } from "./data-source"
 import { Clicked } from "./entity/Clicked";
-import { User } from "./entity/User"
+import { Uploaded } from "./entity/Uploaded";
 
 AppDataSource.initialize().then(async () => {
     const clickeds = await AppDataSource.manager.find(Clicked)
@@ -13,6 +13,13 @@ AppDataSource.initialize().then(async () => {
       clicked.signature = 6
       clicked.vehicle = 3
       await AppDataSource.manager.save(clicked)
+    }
+
+    const uploaded = await AppDataSource.manager.find(Uploaded)
+    if(uploaded.length === 0) {
+      const uploaded = new Uploaded()
+      uploaded.uri = ''
+      await AppDataSource.manager.save(uploaded)
     }
 
 }).catch(error => console.log(error))

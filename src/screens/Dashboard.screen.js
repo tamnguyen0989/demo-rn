@@ -10,17 +10,12 @@ import { styles } from "./Dashboard.styles";
 import XAxisChart from "../component/chart.component";
 import {
   getClickedNumber,
-  initData,
   updateClickedNumber,
 } from "../services/clicked.service";
 import { ActivityIndicator, Button } from "react-native-paper";
 import { CameraPhotoModal } from "./CameraPhoto.modal";
 import { HeroImage } from "../component/hero-image.component";
-import { getFiles } from "../services/storage.service";
-import { AppDataSource } from "../typeorm/data-source";
-import { User } from "../typeorm/entity/User";
-import { getDataSource } from "../typeorm/index";
-import { Clicked } from "../typeorm/entity/Clicked";
+import { getFiles } from "../services/uploaded.service";
 
 export const DashboardScreen = ({ navigation, imageUrl }) => {
   const [isLoadingChart, setLoadingChart] = useState(false);
@@ -122,26 +117,7 @@ export const DashboardScreen = ({ navigation, imageUrl }) => {
   };
 
   useEffect(() => {
-    // function onGetClickedNumber(clickeds) {
-    //   const data = getDataChart(clickeds[0]);
-    //   setDataChart(data);
-    //   setData(clickeds[0]);
-    // }
-    // function onGetfiles(files) {
-    //   if (files.length) setImageData(files[0]);
-    // }
-    // initData(db);
-    // setLoadingChart(true);
-    // getClickedNumber(db, onGetClickedNumber);
-    // setLoadingChart(false);
-    // setLoadingImage(true);
-    // getFiles(db, onGetfiles);
-    // setLoadingImage(false);
-    // return () => {
-    //   db.closeSync();
-    // };
-
-    async function getClickeds() {
+    async function fetchClickeds() {
       setLoadingChart(true);
       const clickeds = await getClickedNumber();
       const data = getDataChart(clickeds[0]);
@@ -150,7 +126,15 @@ export const DashboardScreen = ({ navigation, imageUrl }) => {
       setLoadingChart(false);
     }
 
-    getClickeds();
+    async function fetchFiles() {
+      setLoadingImage(true);
+      const files = await getFiles();
+      if (files.length) setImageData(files[0]);
+      setLoadingImage(false);
+    }
+
+    fetchClickeds();
+    fetchFiles();
   }, []);
 
   return (
