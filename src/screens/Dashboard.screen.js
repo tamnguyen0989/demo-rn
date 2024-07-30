@@ -17,7 +17,6 @@ import { ActivityIndicator, Button } from "react-native-paper";
 import { CameraPhotoModal } from "./CameraPhoto.modal";
 import { HeroImage } from "../component/hero-image.component";
 import { getFiles } from "../services/storage.service";
-import * as SQLite from "expo-sqlite";
 import { AppDataSource } from "../typeorm/data-source";
 import { User } from "../typeorm/entity/User";
 import { getDataSource } from "../typeorm/index";
