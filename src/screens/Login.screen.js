@@ -8,8 +8,9 @@ import { styles } from "./Login.styles";
 import { AuthenticationContext } from "../services/authentication.context";
 import { Typography } from "../component/typography.component";
 import { colors } from "../utils/colors";
-import { EMAIL, PASS } from "../setup/firebase.setup";
-import { spacing } from "../utils/spacings";
+
+export const EMAIL = "test@titandms.com.au";
+export const PASS = "123456";
 
 export const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState(EMAIL);
