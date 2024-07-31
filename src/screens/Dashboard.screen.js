@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
@@ -10,22 +10,35 @@ import { styles } from "./Dashboard.styles";
 import XAxisChart from "../component/chart.component";
 import {
   getClickedNumber,
-  initData,
   updateClickedNumber,
 } from "../services/clicked.service";
 import { ActivityIndicator, Button } from "react-native-paper";
+
 import { CameraPhotoModal } from "./CameraPhoto.modal";
 import { HeroImage } from "../component/hero-image.component";
-import { getFiles } from "../services/storage.service";
+import { getBarcodeData, getFiles } from "../services/storage.service";
 import * as SQLite from "expo-sqlite";
+import { BarCodeContent } from "../component/bar-code-content.component";
+import { spacing } from "../utils/spacings";
+import { CameraBarcodeModal } from "./CameraBarcode.modal";
+import { initData } from "../services/initData";
 
 export const DashboardScreen = ({ navigation, imageUrl }) => {
   const [isLoadingChart, setLoadingChart] = useState(false);
   const [dataChart, setDataChart] = useState([]);
   const [data, setData] = useState({});
-  const [imageData, setImageData] = useState("");
+  const [imageData, setImageData] = useState({
+    id: 1,
+    uri: "",
+  });
   const [isShowModal, setShowModal] = useState(false);
   const [isLoadingImage, setLoadingImage] = useState(false);
+  const [isShowModalBarcode, setShowModalBarcode] = useState(false);
+  const [barcodeData, setBarcodeData] = useState({
+    id: 2,
+    uri: "",
+  });
+  const [isLoadingBarcode, setLoadingBarcodeImage] = useState(false);
 
   const db = SQLite.openDatabase("demo.db");
 
@@ -41,6 +54,7 @@ export const DashboardScreen = ({ navigation, imageUrl }) => {
   };
   const scanQRCode = (label) => {
     setClickedNumber(label);
+    setShowModalBarcode(true);
   };
   const signName = (label) => {
     setClickedNumber(label);
@@ -131,6 +145,9 @@ export const DashboardScreen = ({ navigation, imageUrl }) => {
     function onGetfiles(files) {
       if (files.length) setImageData(files[0]);
     }
+    function onGetBarcodes(barcodes) {
+      if (barcodes.length) setBarcodeData(barcodes[0]);
+    }
 
     initData(db);
 
@@ -142,6 +159,10 @@ export const DashboardScreen = ({ navigation, imageUrl }) => {
     getFiles(db, onGetfiles);
     setLoadingImage(false);
 
+    setLoadingBarcodeImage(true);
+    getBarcodeData(db, onGetBarcodes);
+    setLoadingBarcodeImage(false);
+
     return () => {
       db.closeSync();
     };
@@ -149,29 +170,44 @@ export const DashboardScreen = ({ navigation, imageUrl }) => {
 
   return (
     <SafeArea>
-      <View style={styles.container}>
-        <View style={styles.logoutButtonWrapper}>
-          <Button mode='elevated' onPress={() => navigation.navigate("Login")}>
-            Logout
-          </Button>
+      <ScrollView>
+        <View style={styles.container}>
+          <View style={styles.logoutButtonWrapper}>
+            <Button
+              mode='elevated'
+              onPress={() => navigation.navigate("Login")}
+            >
+              Logout
+            </Button>
+          </View>
+          <View style={styles.chartWrapper}>
+            {isLoadingChart ? (
+              <View style={styles.indicatorChartWrapper}>
+                <ActivityIndicator size={50} animating={true} />
+              </View>
+            ) : (
+              <XAxisChart data={dataChart} />
+            )}
+          </View>
+          <HeroImage imageData={imageData} isLoadingImage={isLoadingImage} />
+          <BarCodeContent barcodeData={barcodeData} />
         </View>
-        <View style={styles.chartWrapper}>
-          {isLoadingChart ? (
-            <View style={styles.indicatorChartWrapper}>
-              <ActivityIndicator size={50} animating={true} />
-            </View>
-          ) : (
-            <XAxisChart data={dataChart} />
-          )}
-        </View>
+      </ScrollView>
+      <View style={styles.buttonGroupWrapper}>
         <View style={styles.buttonsGroup}>{renderActionButtons}</View>
-        <HeroImage imageData={imageData} isLoadingImage={isLoadingImage} />
       </View>
       <CameraPhotoModal
         isShowModal={isShowModal}
         imageData={imageData}
         onCloseModal={() => setShowModal(false)}
         onImageData={(newImageData) => setImageData(newImageData)}
+        db={db}
+      />
+      <CameraBarcodeModal
+        isShowModal={isShowModalBarcode}
+        barcodeData={barcodeData}
+        onCloseModal={() => setShowModalBarcode(false)}
+        onBarcodeData={(newBarcodeData) => setBarcodeData(newBarcodeData)}
         db={db}
       />
     </SafeArea>

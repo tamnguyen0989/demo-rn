@@ -29,11 +29,11 @@ export const CameraPhotoModal = ({
   const [camera, setCamera] = useState(null);
   const [isTaking, setTaking] = useState(false);
 
-  function toggleCameraType() {
+  const toggleCameraType = () => {
     setType((current) =>
       current === CameraType.back ? CameraType.front : CameraType.back
     );
-  }
+  };
 
   const takePicture = async () => {
     if (camera) {

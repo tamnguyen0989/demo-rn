@@ -7,8 +7,8 @@ export const HeroImage = ({ imageData, isLoadingImage }) => {
     <View
       style={{
         padding: spacing.sm,
-        width: 280,
-        height: 350,
+        width: 250,
+        height: 320,
         maxWidth: Platform.OS === "web" ? "768px" : "unset",
         alignItems: "center",
         justifyContent: "center",
