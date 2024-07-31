@@ -1,4 +1,4 @@
-import { createClicked, getClickedNumber } from "../services/clicked.service";
+import { getClickedNumber } from "../services/clicked.service";
 import { AppDataSource } from "./data-source"
 import { Clicked } from "./entity/Clicked";
 import { Uploaded } from "./entity/Uploaded";
