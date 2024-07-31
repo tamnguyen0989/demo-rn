@@ -8,15 +8,14 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { SafeArea } from "../component/safe-area.component";
 import { styles } from "./Dashboard.styles";
 import XAxisChart from "../component/chart.component";
-import {
-  getClickedNumber,
-  initData,
-  updateClickedNumber,
-} from "../services/clicked.service";
+import // getClickedNumber,
+// initData,
+// updateClickedNumber,
+"../services/clicked.service";
 import { ActivityIndicator, Button } from "react-native-paper";
 import { CameraPhotoModal } from "./CameraPhoto.modal";
 import { HeroImage } from "../component/hero-image.component";
-import { getFiles } from "../services/storage.service";
+// import { getFiles } from "../services/storage.service";
 import * as SQLite from "expo-sqlite";
 
 export const DashboardScreen = ({ navigation, imageUrl }) => {
@@ -123,24 +122,24 @@ export const DashboardScreen = ({ navigation, imageUrl }) => {
   };
 
   useEffect(() => {
-    function onGetClickedNumber(clickeds) {
-      const data = getDataChart(clickeds[0]);
-      setDataChart(data);
-      setData(clickeds[0]);
-    }
-    function onGetfiles(files) {
-      if (files.length) setImageData(files[0]);
-    }
+    // function onGetClickedNumber(clickeds) {
+    //   const data = getDataChart(clickeds[0]);
+    //   setDataChart(data);
+    //   setData(clickeds[0]);
+    // }
+    // function onGetfiles(files) {
+    //   if (files.length) setImageData(files[0]);
+    // }
 
-    initData(db);
+    // // initData(db);
 
-    setLoadingChart(true);
-    getClickedNumber(db, onGetClickedNumber);
-    setLoadingChart(false);
+    // setLoadingChart(true);
+    // getClickedNumber(db, onGetClickedNumber);
+    // setLoadingChart(false);
 
-    setLoadingImage(true);
-    getFiles(db, onGetfiles);
-    setLoadingImage(false);
+    // setLoadingImage(true);
+    // getFiles(db, onGetfiles);
+    // setLoadingImage(false);
 
     return () => {
       db.closeSync();

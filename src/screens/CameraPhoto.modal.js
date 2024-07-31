@@ -14,7 +14,6 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 
 import { spacing } from "../utils/spacings";
-import { uploadFile } from "../services/storage.service";
 import { styles } from "./CameraPhoto.styles";
 
 export const CameraPhotoModal = ({
@@ -50,7 +49,7 @@ export const CameraPhotoModal = ({
         ...imageData,
         uri,
       };
-      uploadFile(db, newImageData);
+      // uploadFile(db, newImageData);
       setTaking(false);
       onImageData(newImageData);
       onCloseModal();
