@@ -26,7 +26,7 @@ export const DashboardScreen = ({ navigation, imageUrl }) => {
   const [isShowModal, setShowModal] = useState(false);
   const [isLoadingImage, setLoadingImage] = useState(false);
 
-  const db = SQLite.openDatabase("demo.db");
+  // const db = SQLite.openDatabase("demo.db");
 
   const getVehicle = (label) => {
     setClickedNumber(label);
@@ -82,14 +82,13 @@ export const DashboardScreen = ({ navigation, imageUrl }) => {
   ];
 
   const setClickedNumber = async (label) => {
-    const newData = { ...data };
-    newData[label.toLocaleLowerCase()] += 1;
-    setData(newData);
-    const newDataChard = getDataChart(newData);
-    setDataChart(newDataChard);
-    updateClickedNumber(db, newData);
-
-    getClickedNumber(db);
+    // const newData = { ...data };
+    // newData[label.toLocaleLowerCase()] += 1;
+    // setData(newData);
+    // const newDataChard = getDataChart(newData);
+    // setDataChart(newDataChard);
+    // updateClickedNumber(db, newData);
+    // getClickedNumber(db);
   };
 
   const renderActionButtons = actionButtons.map(
@@ -130,20 +129,13 @@ export const DashboardScreen = ({ navigation, imageUrl }) => {
     // function onGetfiles(files) {
     //   if (files.length) setImageData(files[0]);
     // }
-
     // // initData(db);
-
     // setLoadingChart(true);
     // getClickedNumber(db, onGetClickedNumber);
     // setLoadingChart(false);
-
     // setLoadingImage(true);
     // getFiles(db, onGetfiles);
     // setLoadingImage(false);
-
-    return () => {
-      db.closeSync();
-    };
   }, []);
 
   return (
@@ -171,7 +163,6 @@ export const DashboardScreen = ({ navigation, imageUrl }) => {
         imageData={imageData}
         onCloseModal={() => setShowModal(false)}
         onImageData={(newImageData) => setImageData(newImageData)}
-        db={db}
       />
     </SafeArea>
   );
