@@ -22,6 +22,7 @@ import { BarCodeContent } from "../component/bar-code-content.component";
 import { spacing } from "../utils/spacings";
 import { CameraBarcodeModal } from "./CameraBarcode.modal";
 import { initData } from "../services/initData";
+import { SignatureModal } from "./Signature.modal";
 
 export const DashboardScreen = ({ navigation, imageUrl }) => {
   const [isLoadingChart, setLoadingChart] = useState(false);
@@ -39,6 +40,7 @@ export const DashboardScreen = ({ navigation, imageUrl }) => {
     uri: "",
   });
   const [isLoadingBarcode, setLoadingBarcodeImage] = useState(false);
+  const [isShowModalSignature, setShowModalSignature] = useState(false);
 
   const db = SQLite.openDatabase("demo.db");
 
@@ -58,6 +60,7 @@ export const DashboardScreen = ({ navigation, imageUrl }) => {
   };
   const signName = (label) => {
     setClickedNumber(label);
+    setShowModalSignature(true);
   };
 
   const LABEL = {
@@ -208,6 +211,13 @@ export const DashboardScreen = ({ navigation, imageUrl }) => {
         barcodeData={barcodeData}
         onCloseModal={() => setShowModalBarcode(false)}
         onBarcodeData={(newBarcodeData) => setBarcodeData(newBarcodeData)}
+        db={db}
+      />
+      <SignatureModal
+        isShowModal={isShowModalSignature}
+        // barcodeData={barcodeData}
+        onCloseModal={() => setShowModalSignature(false)}
+        // onBarcodeData={(newBarcodeData) => setBarcodeData(newBarcodeData)}
         db={db}
       />
     </SafeArea>
