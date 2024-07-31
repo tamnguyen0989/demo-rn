@@ -1,28 +1,28 @@
-import { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, ScrollView } from "react-native";
-import { FontAwesome } from "@expo/vector-icons";
-import { AntDesign } from "@expo/vector-icons";
-import { Ionicons } from "@expo/vector-icons";
-import { FontAwesome5 } from "@expo/vector-icons";
+import { useEffect, useState } from 'react';
+import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
 
-import { SafeArea } from "../component/safe-area.component";
-import { styles } from "./Dashboard.styles";
-import XAxisChart from "../component/chart.component";
+import { SafeArea } from '../component/safe-area.component';
+import { styles } from './Dashboard.styles';
+import XAxisChart from '../component/chart.component';
 import {
   getClickedNumber,
   updateClickedNumber,
-} from "../services/clicked.service";
-import { ActivityIndicator, Button } from "react-native-paper";
+} from '../services/clicked.service';
+import { ActivityIndicator, Button } from 'react-native-paper';
 
-import { CameraPhotoModal } from "./CameraPhoto.modal";
-import { HeroImage } from "../component/hero-image.component";
-import { getBarcodeData, getFiles } from "../services/storage.service";
-import * as SQLite from "expo-sqlite";
-import { BarCodeContent } from "../component/bar-code-content.component";
-import { spacing } from "../utils/spacings";
-import { CameraBarcodeModal } from "./CameraBarcode.modal";
-import { initData } from "../services/initData";
-import { SignatureModal } from "./Signature.modal";
+import { CameraPhotoModal } from './CameraPhoto.modal';
+import { HeroImage } from '../component/hero-image.component';
+import { getBarcodeData, getFiles } from '../services/storage.service';
+import * as SQLite from 'expo-sqlite';
+import { BarCodeContent } from '../component/bar-code-content.component';
+import { spacing } from '../utils/spacings';
+import { CameraBarcodeModal } from './CameraBarcode.modal';
+import { initData } from '../services/initData';
+import { SignatureModal } from './Signature.modal';
 
 export const DashboardScreen = ({ navigation, imageUrl }) => {
   const [isLoadingChart, setLoadingChart] = useState(false);
@@ -30,19 +30,19 @@ export const DashboardScreen = ({ navigation, imageUrl }) => {
   const [data, setData] = useState({});
   const [imageData, setImageData] = useState({
     id: 1,
-    uri: "",
+    uri: '',
   });
   const [isShowModal, setShowModal] = useState(false);
   const [isLoadingImage, setLoadingImage] = useState(false);
   const [isShowModalBarcode, setShowModalBarcode] = useState(false);
   const [barcodeData, setBarcodeData] = useState({
     id: 2,
-    uri: "",
+    uri: '',
   });
   const [isLoadingBarcode, setLoadingBarcodeImage] = useState(false);
   const [isShowModalSignature, setShowModalSignature] = useState(false);
 
-  const db = SQLite.openDatabase("demo.db");
+  const db = SQLite.openDatabase('demo.db');
 
   const getVehicle = (label) => {
     setClickedNumber(label);
@@ -64,36 +64,36 @@ export const DashboardScreen = ({ navigation, imageUrl }) => {
   };
 
   const LABEL = {
-    vehicle: "Vehicle",
-    person: "Person",
-    photo: "Photo",
-    scan: "Scan",
-    signature: "Signature",
+    vehicle: 'Vehicle',
+    person: 'Person',
+    photo: 'Photo',
+    scan: 'Scan',
+    signature: 'Signature',
   };
 
   const actionButtons = [
     {
-      icon: <FontAwesome name='car' size={15} />,
+      icon: <FontAwesome name='car' size={20} />,
       label: LABEL.vehicle,
       onPress: () => getVehicle(LABEL.vehicle),
     },
     {
-      icon: <FontAwesome name='user' size={15} />,
+      icon: <FontAwesome name='user' size={20} />,
       label: LABEL.person,
       onPress: () => getPerson(LABEL.person),
     },
     {
-      icon: <AntDesign name='camera' size={15} />,
+      icon: <AntDesign name='camera' size={20} />,
       label: LABEL.photo,
       onPress: () => takePhoto(LABEL.photo),
     },
     {
-      icon: <Ionicons name='scan-circle' size={15} />,
+      icon: <Ionicons name='scan-circle' size={20} />,
       label: LABEL.scan,
       onPress: () => scanQRCode(LABEL.scan),
     },
     {
-      icon: <FontAwesome5 name='signature' size={15} />,
+      icon: <FontAwesome5 name='signature' size={20} />,
       label: LABEL.signature,
       onPress: () => signName(LABEL.signature),
     },
@@ -178,7 +178,7 @@ export const DashboardScreen = ({ navigation, imageUrl }) => {
           <View style={styles.logoutButtonWrapper}>
             <Button
               mode='elevated'
-              onPress={() => navigation.navigate("Login")}
+              onPress={() => navigation.navigate('Login')}
             >
               Logout
             </Button>
@@ -215,9 +215,9 @@ export const DashboardScreen = ({ navigation, imageUrl }) => {
       />
       <SignatureModal
         isShowModal={isShowModalSignature}
-        // barcodeData={barcodeData}
+        imageData={imageData}
         onCloseModal={() => setShowModalSignature(false)}
-        // onBarcodeData={(newBarcodeData) => setBarcodeData(newBarcodeData)}
+        onImageData={(newImageData) => setImageData(newImageData)}
         db={db}
       />
     </SafeArea>
