@@ -1,29 +1,37 @@
+import * as SQLite from "expo-sqlite";
+
 import { tbClicked, tbUploaded } from "../constants/sqlite.constants";
 
-export const initData = (db) => {
-  db.transaction((tx) => {
-    tx.executeSql(`
-      CREATE TABLE IF NOT EXISTS ${tbClicked} (id INTEGER PRIMARY KEY AUTOINCREMENT, person INTEGER, photo INTEGER, scan INTEGER, signature INTEGER, vehicle INTEGER)
-      `);
-  });
-  db.transaction((tx) => {
-    tx.executeSql(`SELECT * FROM ${tbClicked}`, null, (txObj, result) => {
-      if (result.rows._array.length === 0)
-        tx.executeSql(
-          `INSERT INTO ${tbClicked} (person, photo, scan, signature, vehicle) VALUES (1, 10, 25, 6, 3)`
-        );
-    });
-  });
+//Connection is initialised globally
+const db = SQLite.openDatabaseSync("demo.db");
 
-  db.transaction((tx) => {
-    tx.executeSql(
-      `CREATE TABLE IF NOT EXISTS ${tbUploaded} (id INTEGER PRIMARY KEY AUTOINCREMENT, uri TEXT)`
+export async function initDatabase(db) {
+  await db.execAsync(
+    `CREATE TABLE IF NOT EXISTS ${tbClicked} (id INTEGER PRIMARY KEY AUTOINCREMENT, person INTEGER, photo INTEGER, scan INTEGER, signature INTEGER, vehicle INTEGER)`
+  );
+
+  const clickeds = await db.getAllAsync(`SELECT * FROM ${tbClicked}`);
+
+  if (clickeds?.length === 0)
+    await db.runAsync(
+      `INSERT INTO ${tbClicked} (person, photo, scan, signature, vehicle) VALUES (1, 10, 25, 6, 3)`
     );
-  });
-  db.transaction((tx) => {
-    tx.executeSql(`SELECT * FROM ${tbUploaded}`, null, (txObj, result) => {
-      if (result.rows._array.length === 0)
-        tx.executeSql(`INSERT INTO ${tbUploaded} (uri) VALUES ('')`);
-    });
-  });
-};
+
+  await db.execAsync(
+    `CREATE TABLE IF NOT EXISTS ${tbUploaded} (id INTEGER PRIMARY KEY AUTOINCREMENT, uri TEXT, type INTEGER)`
+  );
+
+  const uploadedImages = await db.getAllAsync(
+    `SELECT * FROM ${tbUploaded} WHERE type = 1`
+  );
+  if (uploadedImages?.length === 0)
+    await db.runAsync(`INSERT INTO ${tbUploaded} (uri, type) VALUES ('', 1)`);
+
+  const uploadedSignatures = await db.getAllAsync(
+    `SELECT * FROM ${tbUploaded} WHERE type = 2`
+  );
+  if (uploadedSignatures?.length === 0)
+    await db.runAsync(`INSERT INTO ${tbUploaded} (uri, type) VALUES ('', 2)`);
+}
+
+export default db;

@@ -1,28 +1,26 @@
-import { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons';
-import { Ionicons } from '@expo/vector-icons';
-import { FontAwesome5 } from '@expo/vector-icons';
+import { useEffect, useState } from "react";
+import { View, Text, TouchableOpacity, ScrollView } from "react-native";
+import { FontAwesome } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome5 } from "@expo/vector-icons";
 
-import { SafeArea } from '../component/safe-area.component';
-import { styles } from './Dashboard.styles';
-import XAxisChart from '../component/chart.component';
+import { SafeArea } from "../component/safe-area.component";
+import { styles } from "./Dashboard.styles";
+import XAxisChart from "../component/chart.component";
 import {
   getClickedNumber,
   updateClickedNumber,
-} from '../services/clicked.service';
-import { ActivityIndicator, Button } from 'react-native-paper';
+} from "../services/clicked.service";
+import { ActivityIndicator, Button } from "react-native-paper";
+import db from "../setup/sqlite.setup";
 
-import { CameraPhotoModal } from './CameraPhoto.modal';
-import { HeroImage } from '../component/hero-image.component';
-import { getBarcodeData, getFiles } from '../services/storage.service';
-import * as SQLite from 'expo-sqlite';
-import { BarCodeContent } from '../component/bar-code-content.component';
-import { spacing } from '../utils/spacings';
-import { CameraBarcodeModal } from './CameraBarcode.modal';
-import { initData } from '../services/initData';
-import { SignatureModal } from './Signature.modal';
+import { CameraPhotoModal } from "./CameraPhoto.modal";
+import { HeroImage } from "../component/hero-image.component";
+import { getBarcodeData, getFiles } from "../services/storage.service";
+import { BarCodeContent } from "../component/bar-code-content.component";
+import { CameraBarcodeModal } from "./CameraBarcode.modal";
+import { SignatureModal } from "./Signature.modal";
 
 export const DashboardScreen = ({ navigation, imageUrl }) => {
   const [isLoadingChart, setLoadingChart] = useState(false);
@@ -30,19 +28,17 @@ export const DashboardScreen = ({ navigation, imageUrl }) => {
   const [data, setData] = useState({});
   const [imageData, setImageData] = useState({
     id: 1,
-    uri: '',
+    uri: "",
   });
   const [isShowModal, setShowModal] = useState(false);
   const [isLoadingImage, setLoadingImage] = useState(false);
   const [isShowModalBarcode, setShowModalBarcode] = useState(false);
   const [barcodeData, setBarcodeData] = useState({
     id: 2,
-    uri: '',
+    uri: "",
   });
   const [isLoadingBarcode, setLoadingBarcodeImage] = useState(false);
   const [isShowModalSignature, setShowModalSignature] = useState(false);
-
-  const db = SQLite.openDatabase('demo.db');
 
   const getVehicle = (label) => {
     setClickedNumber(label);
@@ -64,11 +60,11 @@ export const DashboardScreen = ({ navigation, imageUrl }) => {
   };
 
   const LABEL = {
-    vehicle: 'Vehicle',
-    person: 'Person',
-    photo: 'Photo',
-    scan: 'Scan',
-    signature: 'Signature',
+    vehicle: "Vehicle",
+    person: "Person",
+    photo: "Photo",
+    scan: "Scan",
+    signature: "Signature",
   };
 
   const actionButtons = [
@@ -105,9 +101,7 @@ export const DashboardScreen = ({ navigation, imageUrl }) => {
     setData(newData);
     const newDataChard = getDataChart(newData);
     setDataChart(newDataChard);
-    updateClickedNumber(db, newData);
-
-    getClickedNumber(db);
+    await updateClickedNumber(db, newData);
   };
 
   const renderActionButtons = actionButtons.map(
@@ -140,35 +134,30 @@ export const DashboardScreen = ({ navigation, imageUrl }) => {
   };
 
   useEffect(() => {
-    function onGetClickedNumber(clickeds) {
+    async function onGetClickedNumber() {
+      setLoadingChart(true);
+      const clickeds = await getClickedNumber(db);
+      setLoadingChart(false);
       const data = getDataChart(clickeds[0]);
       setDataChart(data);
       setData(clickeds[0]);
     }
-    function onGetfiles(files) {
+    async function onGetfiles() {
+      setLoadingImage(true);
+      const files = await getFiles(db);
+      setLoadingImage(false);
       if (files.length) setImageData(files[0]);
     }
-    function onGetBarcodes(barcodes) {
+    async function onGetBarcodes() {
+      setLoadingBarcodeImage(true);
+      const barcodes = await getBarcodeData(db);
+      setLoadingBarcodeImage(false);
       if (barcodes.length) setBarcodeData(barcodes[0]);
     }
 
-    initData(db);
-
-    setLoadingChart(true);
-    getClickedNumber(db, onGetClickedNumber);
-    setLoadingChart(false);
-
-    setLoadingImage(true);
-    getFiles(db, onGetfiles);
-    setLoadingImage(false);
-
-    setLoadingBarcodeImage(true);
-    getBarcodeData(db, onGetBarcodes);
-    setLoadingBarcodeImage(false);
-
-    return () => {
-      db.closeSync();
-    };
+    onGetClickedNumber();
+    onGetfiles();
+    onGetBarcodes();
   }, []);
 
   return (
@@ -178,7 +167,7 @@ export const DashboardScreen = ({ navigation, imageUrl }) => {
           <View style={styles.logoutButtonWrapper}>
             <Button
               mode='elevated'
-              onPress={() => navigation.navigate('Login')}
+              onPress={() => navigation.navigate("Login")}
             >
               Logout
             </Button>
@@ -193,7 +182,10 @@ export const DashboardScreen = ({ navigation, imageUrl }) => {
             )}
           </View>
           <HeroImage imageData={imageData} isLoadingImage={isLoadingImage} />
-          <BarCodeContent barcodeData={barcodeData} />
+          <BarCodeContent
+            barcodeData={barcodeData}
+            isLoadingBarcode={isLoadingBarcode}
+          />
         </View>
       </ScrollView>
       <View style={styles.buttonGroupWrapper}>
@@ -204,21 +196,18 @@ export const DashboardScreen = ({ navigation, imageUrl }) => {
         imageData={imageData}
         onCloseModal={() => setShowModal(false)}
         onImageData={(newImageData) => setImageData(newImageData)}
-        db={db}
       />
       <CameraBarcodeModal
         isShowModal={isShowModalBarcode}
         barcodeData={barcodeData}
         onCloseModal={() => setShowModalBarcode(false)}
         onBarcodeData={(newBarcodeData) => setBarcodeData(newBarcodeData)}
-        db={db}
       />
       <SignatureModal
         isShowModal={isShowModalSignature}
         imageData={imageData}
         onCloseModal={() => setShowModalSignature(false)}
         onImageData={(newImageData) => setImageData(newImageData)}
-        db={db}
       />
     </SafeArea>
   );

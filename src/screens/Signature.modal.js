@@ -1,20 +1,20 @@
-import { useRef, useState } from 'react';
-import { View, Pressable, Modal } from 'react-native';
-import { AntDesign } from '@expo/vector-icons';
-import SignatureScreen from 'react-native-signature-canvas';
-import * as FileSystem from 'expo-file-system';
+import { useRef } from "react";
+import { View, Pressable, Modal } from "react-native";
+import { AntDesign } from "@expo/vector-icons";
+import SignatureScreen from "react-native-signature-canvas";
+import * as FileSystem from "expo-file-system";
+import db from "../setup/sqlite.setup";
 
-import { spacing } from '../utils/spacings';
-import { styles } from './Signature.styles';
-import { uploadFile } from '../services/storage.service';
-import { createGuid } from '../utils/helper';
+import { spacing } from "../utils/spacings";
+import { styles } from "./Signature.styles";
+import { uploadFile } from "../services/storage.service";
+import { createGuid } from "../utils/helper";
 
 export const SignatureModal = ({
   isShowModal,
   onCloseModal,
   onImageData,
   imageData,
-  db,
 }) => {
   const ref = useRef();
 
@@ -24,18 +24,18 @@ export const SignatureModal = ({
     const path = `${FileSystem.cacheDirectory}sign.png?v=${uid}`;
     FileSystem.writeAsStringAsync(
       path,
-      signature.replace('data:image/png;base64,', ''),
+      signature.replace("data:image/png;base64,", ""),
       { encoding: FileSystem.EncodingType.Base64 }
     )
       .then(() => {
         FileSystem.getInfoAsync(path);
       })
-      .then((data) => {
+      .then(async (data) => {
         const newImageData = {
           ...imageData,
           uri: path,
         };
-        uploadFile(db, newImageData);
+        await uploadFile(db, newImageData);
         onImageData(newImageData);
         onCloseModal();
       })

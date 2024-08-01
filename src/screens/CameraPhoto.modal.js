@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from "react";
 import {
   View,
   Text,
@@ -6,23 +6,23 @@ import {
   Pressable,
   Modal,
   Platform,
-} from 'react-native';
-import { ActivityIndicator, Button } from 'react-native-paper';
-import { Camera, CameraType } from 'expo-camera/legacy';
-import { manipulateAsync } from 'expo-image-manipulator';
-import { MaterialIcons } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons';
+} from "react-native";
+import { ActivityIndicator, Button } from "react-native-paper";
+import { Camera, CameraType } from "expo-camera/legacy";
+import { manipulateAsync } from "expo-image-manipulator";
+import { MaterialIcons } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 
-import { spacing } from '../utils/spacings';
-import { uploadFile } from '../services/storage.service';
-import { styles } from './CameraPhoto.styles';
+import { spacing } from "../utils/spacings";
+import { uploadFile } from "../services/storage.service";
+import { styles } from "./CameraPhoto.styles";
+import db from "../setup/sqlite.setup";
 
 export const CameraPhotoModal = ({
   isShowModal,
   onCloseModal,
   onImageData,
   imageData,
-  db,
 }) => {
   const [type, setType] = useState(CameraType.back);
   const [permission, requestPermission] = Camera.useCameraPermissions();
@@ -50,8 +50,8 @@ export const CameraPhotoModal = ({
         ...imageData,
         uri,
       };
-      console.log('...newImageData', newImageData);
-      uploadFile(db, newImageData);
+
+      await uploadFile(db, newImageData);
       setTaking(false);
       onImageData(newImageData);
       onCloseModal();
@@ -72,13 +72,13 @@ export const CameraPhotoModal = ({
             </Pressable>
           </View>
           <View style={styles.cameraWrapper}>
-            {!permission || Platform.OS === 'web' ? (
-              <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+            {!permission || Platform.OS === "web" ? (
+              <View style={{ justifyContent: "center", alignItems: "center" }}>
                 <Text>No access to camera</Text>
               </View>
             ) : !permission.granted ? (
-              <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                <Text style={{ textAlign: 'center', marginBottom: spacing.md }}>
+              <View style={{ justifyContent: "center", alignItems: "center" }}>
+                <Text style={{ textAlign: "center", marginBottom: spacing.md }}>
                   We need your permission to show the camera
                 </Text>
                 <Button mode='elevated' onPress={requestPermission}>

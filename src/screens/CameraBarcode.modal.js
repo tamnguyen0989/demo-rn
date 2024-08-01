@@ -6,24 +6,23 @@ import {
   Pressable,
   Modal,
   Platform,
-  StyleSheet,
 } from "react-native";
 import { ActivityIndicator, Button } from "react-native-paper";
 import { MaterialIcons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import { CameraType } from "expo-camera/legacy";
+import db from "../setup/sqlite.setup";
 
 import { spacing } from "../utils/spacings";
 import { styles } from "./CameraPhoto.styles";
-import { uploadBarcodeData } from "../services/storage.service";
+import { uploadFile } from "../services/storage.service";
 
 export const CameraBarcodeModal = ({
   isShowModal,
   onCloseModal,
   onBarcodeData,
   barcodeData,
-  db,
 }) => {
   const [type, setType] = useState(CameraType.back);
   const [permission, requestPermission] = useCameraPermissions();
@@ -42,7 +41,7 @@ export const CameraBarcodeModal = ({
     };
 
     onBarcodeData(newBarcodeData);
-    uploadBarcodeData(db, newBarcodeData);
+    uploadFile(db, newBarcodeData);
     onCloseModal();
   };
 
