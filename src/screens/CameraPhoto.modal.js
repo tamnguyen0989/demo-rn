@@ -37,15 +37,19 @@ export const CameraPhotoModal = ({
 
   const takePicture = async () => {
     if (camera) {
+      let uri = "";
       setTaking(true);
-      const data = await camera.takePictureAsync({
-        quality: 0.5,
-      });
-      const { uri } = await manipulateAsync(
-        data.uri,
-        [{ resize: { width: 1024 } }],
-        { compress: 0.7 }
-      );
+      try {
+        const data = await camera.takePictureAsync({
+          quality: 0.5,
+        });
+        const { uri: uriMan } = await manipulateAsync(
+          data.uri,
+          [{ resize: { width: 1024 } }],
+          { compress: 0.7 }
+        );
+        uri = uriMan;
+      } catch (error) {}
       const newImageData = {
         ...imageData,
         uri,
