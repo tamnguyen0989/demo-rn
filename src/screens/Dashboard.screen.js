@@ -1,30 +1,30 @@
-import { useEffect, useState, useRef } from "react";
-import { View, Text, TouchableOpacity, ScrollView } from "react-native";
-import { FontAwesome } from "@expo/vector-icons";
-import { AntDesign } from "@expo/vector-icons";
-import { Ionicons } from "@expo/vector-icons";
-import { FontAwesome5 } from "@expo/vector-icons";
-import * as Device from "expo-device";
-import * as Notifications from "expo-notifications";
-import Constants from "expo-constants";
-import { Platform } from "react-native";
+import { useEffect, useState, useRef } from 'react';
+import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
+import * as Device from 'expo-device';
+import * as Notifications from 'expo-notifications';
+import Constants from 'expo-constants';
+import { Platform } from 'react-native';
 
-import { SafeArea } from "../component/safe-area.component";
-import { styles } from "./Dashboard.styles";
-import XAxisChart from "../component/chart.component";
+import { SafeArea } from '../component/safe-area.component';
+import { styles } from './Dashboard.styles';
+import XAxisChart from '../component/chart.component';
 import {
   getClickedNumber,
   updateClickedNumber,
-} from "../services/clicked.service";
-import { ActivityIndicator, Button } from "react-native-paper";
-import db from "../setup/sqlite.setup";
+} from '../services/clicked.service';
+import { ActivityIndicator, Button } from 'react-native-paper';
+import db from '../setup/sqlite.setup';
 
-import { CameraPhotoModal } from "./CameraPhoto.modal";
-import { HeroImage } from "../component/hero-image.component";
-import { getBarcodeData, getFiles } from "../services/storage.service";
-import { BarCodeContent } from "../component/bar-code-content.component";
-import { CameraBarcodeModal } from "./CameraBarcode.modal";
-import { SignatureModal } from "./Signature.modal";
+import { CameraPhotoModal } from './CameraPhoto.modal';
+import { HeroImage } from '../component/hero-image.component';
+import { getBarcodeData, getFiles } from '../services/storage.service';
+import { BarCodeContent } from '../component/bar-code-content.component';
+import { CameraBarcodeModal } from './CameraBarcode.modal';
+import { SignatureModal } from './Signature.modal';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -40,19 +40,19 @@ export const DashboardScreen = ({ navigation, imageUrl }) => {
   const [data, setData] = useState({});
   const [imageData, setImageData] = useState({
     id: 1,
-    uri: "",
+    uri: '',
   });
   const [isShowModal, setShowModal] = useState(false);
   const [isLoadingImage, setLoadingImage] = useState(false);
   const [isShowModalBarcode, setShowModalBarcode] = useState(false);
   const [barcodeData, setBarcodeData] = useState({
     id: 2,
-    uri: "",
+    uri: '',
   });
   const [isLoadingBarcode, setLoadingBarcodeImage] = useState(false);
   const [isShowModalSignature, setShowModalSignature] = useState(false);
 
-  const [expoPushToken, setExpoPushToken] = useState("");
+  const [expoPushToken, setExpoPushToken] = useState('');
   const [channels, setChannels] = useState([]);
   const [notification, setNotification] = useState(undefined);
   const notificationListener = useRef();
@@ -78,11 +78,11 @@ export const DashboardScreen = ({ navigation, imageUrl }) => {
   };
 
   const LABEL = {
-    vehicle: "Vehicle",
-    person: "Person",
-    photo: "Photo",
-    scan: "Scan",
-    signature: "Signature",
+    vehicle: 'Vehicle',
+    person: 'Person',
+    photo: 'Photo',
+    scan: 'Scan',
+    signature: 'Signature',
   };
 
   const actionButtons = [
@@ -157,21 +157,21 @@ export const DashboardScreen = ({ navigation, imageUrl }) => {
       content: {
         title: "You've got a message",
         body: `The current date/time: ${currentDate}`,
-        data: { data: "goes here", test: { test1: "more data" } },
+        data: { data: 'goes here', test: { test1: 'more data' } },
       },
-      trigger: { seconds: 2 },
+      trigger: { minute: 1 },
     });
   };
 
   const registerForPushNotificationsAsync = async () => {
     let token;
 
-    if (Platform.OS === "android") {
-      await Notifications.setNotificationChannelAsync("default", {
-        name: "default",
+    if (Platform.OS === 'android') {
+      await Notifications.setNotificationChannelAsync('default', {
+        name: 'default',
         importance: Notifications.AndroidImportance.MAX,
         vibrationPattern: [0, 250, 250, 250],
-        lightColor: "#FF231F7C",
+        lightColor: '#FF231F7C',
       });
     }
 
@@ -179,12 +179,12 @@ export const DashboardScreen = ({ navigation, imageUrl }) => {
       const { status: existingStatus } =
         await Notifications.getPermissionsAsync();
       let finalStatus = existingStatus;
-      if (existingStatus !== "granted") {
+      if (existingStatus !== 'granted') {
         const { status } = await Notifications.requestPermissionsAsync();
         finalStatus = status;
       }
-      if (finalStatus !== "granted") {
-        alert("Failed to get push token for push notification!");
+      if (finalStatus !== 'granted') {
+        alert('Failed to get push token for push notification!');
         return;
       }
       // Learn more about projectId:
@@ -195,7 +195,7 @@ export const DashboardScreen = ({ navigation, imageUrl }) => {
           Constants?.expoConfig?.extra?.eas?.projectId ??
           Constants?.easConfig?.projectId;
         if (!projectId) {
-          throw new Error("Project ID not found");
+          throw new Error('Project ID not found');
         }
         token = (
           await Notifications.getExpoPushTokenAsync({
@@ -206,7 +206,7 @@ export const DashboardScreen = ({ navigation, imageUrl }) => {
         token = `${e}`;
       }
     } else {
-      alert("Must use physical device for Push Notifications");
+      alert('Must use physical device for Push Notifications');
     }
 
     return token;
@@ -244,7 +244,7 @@ export const DashboardScreen = ({ navigation, imageUrl }) => {
     registerForPushNotificationsAsync().then(
       (token) => token && setExpoPushToken(token)
     );
-    if (Platform.OS === "android") {
+    if (Platform.OS === 'android') {
       Notifications.getNotificationChannelsAsync().then((value) =>
         setChannels(value ?? [])
       );
@@ -274,7 +274,7 @@ export const DashboardScreen = ({ navigation, imageUrl }) => {
           <View style={styles.logoutButtonWrapper}>
             <Button
               mode='elevated'
-              onPress={() => navigation.navigate("Login")}
+              onPress={() => navigation.navigate('Login')}
             >
               Logout
             </Button>
