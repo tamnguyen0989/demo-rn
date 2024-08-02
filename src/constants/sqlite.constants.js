@@ -1,2 +1,2 @@
-export const tbClicked = "clicked";
-export const tbUploaded = "uploaded";
+export const tbClicked = 'clicked'
+export const tbUploaded = 'uploaded'

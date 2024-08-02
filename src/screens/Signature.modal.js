@@ -1,14 +1,14 @@
-import { useRef } from "react";
-import { View, Pressable, Modal } from "react-native";
-import { AntDesign } from "@expo/vector-icons";
-import SignatureScreen from "react-native-signature-canvas";
-import * as FileSystem from "expo-file-system";
-import db from "../setup/sqlite.setup";
+import { useRef } from 'react'
+import { View, Pressable, Modal } from 'react-native'
+import { AntDesign } from '@expo/vector-icons'
+import SignatureScreen from 'react-native-signature-canvas'
+import * as FileSystem from 'expo-file-system'
+import db from '../setup/sqlite.setup'
 
-import { spacing } from "../utils/spacings";
-import { styles } from "./Signature.styles";
-import { uploadFile } from "../services/storage.service";
-import { createGuid } from "../utils/helper";
+import { spacing } from '../utils/spacings'
+import { styles } from './Signature.styles'
+import { uploadFile } from '../services/storage.service'
+import { createGuid } from '../utils/helper'
 
 export const SignatureModal = ({
   isShowModal,
@@ -16,61 +16,61 @@ export const SignatureModal = ({
   onImageData,
   imageData,
 }) => {
-  const ref = useRef();
+  const ref = useRef()
 
   // Called after ref.current.readSignature() reads a non-empty base64 string
-  const handleOK = (signature) => {
-    const uid = createGuid();
-    const path = `${FileSystem.cacheDirectory}sign.png?v=${uid}`;
+  const handleOK = signature => {
+    const uid = createGuid()
+    const path = `${FileSystem.cacheDirectory}sign.png?v=${uid}`
     FileSystem.writeAsStringAsync(
       path,
-      signature.replace("data:image/png;base64,", ""),
-      { encoding: FileSystem.EncodingType.Base64 }
+      signature.replace('data:image/png;base64,', ''),
+      { encoding: FileSystem.EncodingType.Base64 },
     )
       .then(() => {
-        FileSystem.getInfoAsync(path);
+        FileSystem.getInfoAsync(path)
       })
-      .then(async (data) => {
+      .then(async data => {
         const newImageData = {
           ...imageData,
           uri: path,
-        };
-        await uploadFile(db, newImageData);
-        onImageData(newImageData);
-        onCloseModal();
+        }
+        await uploadFile(db, newImageData)
+        onImageData(newImageData)
+        onCloseModal()
       })
-      .catch(console.error);
+      .catch(console.error)
 
     // onOK(signature); // Callback from Component props
-  };
+  }
 
   // Called after ref.current.readSignature() reads an empty string
-  const handleEmpty = () => {};
+  const handleEmpty = () => {}
 
   // Called after ref.current.clearSignature()
-  const handleClear = () => {};
+  const handleClear = () => {}
 
   // Called after end of stroke
   const handleEnd = () => {
-    ref.current.readSignature();
-  };
+    ref.current.readSignature()
+  }
 
   // Called after ref.current.getData()
-  const handleData = (data) => {
-    onCloseModal();
-  };
+  const handleData = data => {
+    onCloseModal()
+  }
 
   const onBack = () => {
-    onCloseModal();
-  };
+    onCloseModal()
+  }
 
   return (
-    <Modal animationType='fade' transparent={true} visible={isShowModal}>
+    <Modal animationType="fade" transparent={true} visible={isShowModal}>
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
           <View style={styles.backWrapper}>
             <Pressable style={{ margin: spacing.md }} onPress={onBack}>
-              <AntDesign name='left' size={20} color='black' />
+              <AntDesign name="left" size={20} color="black" />
             </Pressable>
           </View>
           <View style={styles.cameraWrapper}>
@@ -86,5 +86,5 @@ export const SignatureModal = ({
         </View>
       </View>
     </Modal>
-  );
-};
+  )
+}

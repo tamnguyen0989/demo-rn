@@ -1,18 +1,18 @@
-import React, { useState, createContext } from "react";
+import React, { useState, createContext } from 'react'
 
-export const AuthenticationContext = createContext();
+export const AuthenticationContext = createContext()
 
 export const AuthenticationContextProvider = ({ children }) => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [user, setUser] = useState(null);
-  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false)
+  const [user, setUser] = useState(null)
+  const [error, setError] = useState(null)
 
   const onLogin = (email, password, onResolve) => {
-    setIsLoading(true);
-    if (!email || !password) return;
-    setIsLoading(false);
-    onResolve && onResolve();
-  };
+    setIsLoading(true)
+    if (!email || !password) return
+    setIsLoading(false)
+    onResolve && onResolve()
+  }
 
   return (
     <AuthenticationContext.Provider
@@ -22,9 +22,8 @@ export const AuthenticationContextProvider = ({ children }) => {
         isLoading,
         error,
         onLogin,
-      }}
-    >
+      }}>
       {children}
     </AuthenticationContext.Provider>
-  );
-};
+  )
+}

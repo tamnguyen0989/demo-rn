@@ -1,8 +1,8 @@
-import { Platform, StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native'
 
-import { spacing } from '../utils/spacings';
-import { colors } from '../utils/colors';
-import { responsive } from '../utils/responsive';
+import { spacing } from '../utils/spacings'
+import { colors } from '../utils/colors'
+import { responsive } from '../utils/responsive'
 
 export const styles = StyleSheet.create({
   container: {
@@ -111,4 +111,4 @@ export const styles = StyleSheet.create({
     marginBottom: 15,
     textAlign: 'center',
   },
-});
+})

@@ -1,6 +1,6 @@
-import { View, Text, StyleSheet } from "react-native";
-import { ActivityIndicator, Card } from "react-native-paper";
-import { spacing } from "../utils/spacings";
+import { View, Text, StyleSheet } from 'react-native'
+import { ActivityIndicator, Card } from 'react-native-paper'
+import { spacing } from '../utils/spacings'
 
 export const BarCodeContent = ({ barcodeData, isLoadingBarcode }) => {
   return (
@@ -17,11 +17,11 @@ export const BarCodeContent = ({ barcodeData, isLoadingBarcode }) => {
         </Card.Content>
       </Card>
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
     padding: spacing.sm,
   },
-});
+})

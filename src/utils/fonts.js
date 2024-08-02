@@ -2,7 +2,7 @@ export const fontWeights = {
   regular: 400,
   medium: 500,
   bold: 700,
-};
+}
 
 export const fontSizes = {
   caption: 12,
@@ -14,4 +14,4 @@ export const fontSizes = {
   h3: 45,
   h2: 56,
   h1: 112,
-};
+}

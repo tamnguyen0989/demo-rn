@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from 'react'
 import {
   View,
   Text,
@@ -6,17 +6,17 @@ import {
   Pressable,
   Modal,
   Platform,
-} from 'react-native';
-import { ActivityIndicator, Button } from 'react-native-paper';
-import { MaterialIcons } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons';
-import { CameraView, useCameraPermissions } from 'expo-camera';
-import { CameraType } from 'expo-camera/legacy';
-import db from '../setup/sqlite.setup';
+} from 'react-native'
+import { ActivityIndicator, Button } from 'react-native-paper'
+import { MaterialIcons } from '@expo/vector-icons'
+import { AntDesign } from '@expo/vector-icons'
+import { CameraView, useCameraPermissions } from 'expo-camera'
+import { CameraType } from 'expo-camera/legacy'
+import db from '../setup/sqlite.setup'
 
-import { spacing } from '../utils/spacings';
-import { styles } from './CameraPhoto.styles';
-import { uploadFile } from '../services/storage.service';
+import { spacing } from '../utils/spacings'
+import { styles } from './CameraPhoto.styles'
+import { uploadFile } from '../services/storage.service'
 
 export const CameraBarcodeModal = ({
   isShowModal,
@@ -24,38 +24,38 @@ export const CameraBarcodeModal = ({
   onBarcodeData,
   barcodeData,
 }) => {
-  const [type, setType] = useState(CameraType.back);
-  const [permission, requestPermission] = useCameraPermissions();
-  const [isTaking, setTaking] = useState(false);
+  const [type, setType] = useState(CameraType.back)
+  const [permission, requestPermission] = useCameraPermissions()
+  const [isTaking, setTaking] = useState(false)
 
   const toggleCameraType = () => {
-    setType((current) =>
-      current === CameraType.back ? CameraType.front : CameraType.back
-    );
-  };
+    setType(current =>
+      current === CameraType.back ? CameraType.front : CameraType.back,
+    )
+  }
 
   const handleBarCodeScanned = ({ type, data }) => {
     const newBarcodeData = {
       ...barcodeData,
       uri: data,
-    };
+    }
 
-    onBarcodeData(newBarcodeData);
-    uploadFile(db, newBarcodeData);
-    onCloseModal();
-  };
+    onBarcodeData(newBarcodeData)
+    uploadFile(db, newBarcodeData)
+    onCloseModal()
+  }
 
   const onBack = () => {
-    onCloseModal();
-  };
+    onCloseModal()
+  }
 
   return (
-    <Modal animationType='fade' transparent={true} visible={isShowModal}>
+    <Modal animationType="fade" transparent={true} visible={isShowModal}>
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
           <View style={styles.backWrapper}>
             <Pressable style={{ margin: spacing.md }} onPress={onBack}>
-              <AntDesign name='left' size={20} color='black' />
+              <AntDesign name="left" size={20} color="black" />
             </Pressable>
           </View>
           <View style={styles.cameraWrapper}>
@@ -68,7 +68,7 @@ export const CameraBarcodeModal = ({
                 <Text style={{ textAlign: 'center', marginBottom: spacing.md }}>
                   We need your permission to show the camera
                 </Text>
-                <Button mode='elevated' onPress={requestPermission}>
+                <Button mode="elevated" onPress={requestPermission}>
                   Grant permission
                 </Button>
               </View>
@@ -76,23 +76,21 @@ export const CameraBarcodeModal = ({
               <CameraView
                 style={styles.camera}
                 facing={type}
-                onBarcodeScanned={handleBarCodeScanned}
-              >
+                onBarcodeScanned={handleBarCodeScanned}>
                 <View style={styles.buttonContainer}>
                   {isTaking ? (
                     <View style={styles.indicator}>
-                      <ActivityIndicator color='white' />
+                      <ActivityIndicator color="white" />
                     </View>
                   ) : (
                     <>
                       <TouchableOpacity
                         style={styles.button}
-                        onPress={toggleCameraType}
-                      >
+                        onPress={toggleCameraType}>
                         <MaterialIcons
-                          name='flip-camera-android'
+                          name="flip-camera-android"
                           size={24}
-                          color='white'
+                          color="white"
                         />
                       </TouchableOpacity>
                     </>
@@ -104,5 +102,5 @@ export const CameraBarcodeModal = ({
         </View>
       </View>
     </Modal>
-  );
-};
+  )
+}

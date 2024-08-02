@@ -1,22 +1,22 @@
-import { StyleSheet } from "react-native";
-import { StatusBar as ExpoStatusBar } from "expo-status-bar";
+import { StyleSheet } from 'react-native'
+import { StatusBar as ExpoStatusBar } from 'expo-status-bar'
 
-import { AppNavigator } from "./src/navigation/app.navigator";
-import { AuthenticationContextProvider } from "./src/services/authentication.context";
-import db, { initDatabase } from "./src/setup/sqlite.setup";
-import { useEffect } from "react";
+import { AppNavigator } from './src/navigation/app.navigator'
+import { AuthenticationContextProvider } from './src/services/authentication.context'
+import db, { initDatabase } from './src/setup/sqlite.setup'
+import { useEffect } from 'react'
 
 export default function App() {
   useEffect(() => {
-    initDatabase(db);
-  }, []);
+    initDatabase(db)
+  }, [])
 
   return (
     <>
       <AuthenticationContextProvider>
         <AppNavigator />
       </AuthenticationContextProvider>
-      <ExpoStatusBar style='auto' />
+      <ExpoStatusBar style="auto" />
     </>
-  );
+  )
 }
