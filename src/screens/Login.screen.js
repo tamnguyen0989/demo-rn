@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react'
-import { View, Image, Text } from 'react-native'
+import { View, Image, Dimensions } from 'react-native'
 import { Button, TextInput } from 'react-native-paper'
 
 import { Spacer } from '../component/spacer.component'
@@ -21,9 +21,14 @@ export const LoginScreen = ({ navigation }) => {
     navigation.navigate('Dashboard')
   }
 
+  const onLayout = () => {
+    const windowWidth = Dimensions.get('window').width
+    console.log('...windowWidth', windowWidth)
+  }
+
   return (
     <SafeArea>
-      <View style={styles.accountBackground}>
+      <View style={styles.accountBackground} onLayout={onLayout}>
         <View style={styles.logoWrapper}>
           <Image
             source={require('../../assets/titan-logo.png')}

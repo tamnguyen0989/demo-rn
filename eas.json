@@ -13,6 +13,9 @@
       "android": {
         "buildType": "apk",
         "gradleCommand": ":app:assembleRelease"
+      },
+      "ios": {
+        "image": "macos-ventura-13.6-xcode-15.0"
       }
     },
     "production": {}

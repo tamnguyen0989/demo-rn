@@ -14,7 +14,9 @@
     "assetBundlePatterns": ["assets/images/*", "**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.tamn6uyen.demornweb"
+      "bundleIdentifier": "com.tamn6uyen.demornweb",
+      "buildNumber": "1.0.0",
+      "jsEngine": "jsc"
     },
     "android": {
       "adaptiveIcon": {

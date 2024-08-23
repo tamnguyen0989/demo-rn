@@ -99,9 +99,9 @@ export const styles = StyleSheet.create({
   buttonOpen: {
     backgroundColor: '#F194FF',
   },
-  buttonClose: {
-    backgroundColor: '#2196F3',
-  },
+  // buttonOpenTablet: {
+  //   backgroundColor: '#2196F3',
+  // },
   textStyle: {
     color: 'white',
     fontWeight: 'bold',

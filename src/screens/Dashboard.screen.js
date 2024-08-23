@@ -25,6 +25,8 @@ import { getBarcodeData, getFiles } from '../services/storage.service'
 import { BarCodeContent } from '../component/bar-code-content.component'
 import { CameraBarcodeModal } from './CameraBarcode.modal'
 import { SignatureModal } from './Signature.modal'
+import { isMobile } from '../utils/helper'
+import useStyles from '../hook/useStyles.hook'
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -51,12 +53,15 @@ export const DashboardScreen = ({ navigation, imageUrl }) => {
   })
   const [isLoadingBarcode, setLoadingBarcodeImage] = useState(false)
   const [isShowModalSignature, setShowModalSignature] = useState(false)
+  const [isTablet, SetIsTablet] = useState(false)
 
   const [expoPushToken, setExpoPushToken] = useState('')
   const [channels, setChannels] = useState([])
   const [notification, setNotification] = useState(undefined)
   const notificationListener = useRef()
   const responseListener = useRef()
+
+  const { stylesApp } = useStyles(styles)
 
   const getVehicle = label => {
     setClickedNumber(label)
@@ -249,13 +254,15 @@ export const DashboardScreen = ({ navigation, imageUrl }) => {
         setChannels(value ?? []),
       )
     }
-    notificationListener.current =
-      Notifications.addNotificationReceivedListener(notification => {
-        setNotification(notification)
-      })
-    responseListener.current =
-      Notifications.addNotificationResponseReceivedListener(response => {})
-    onSchedulePushNotification()
+    if (isMobile()) {
+      notificationListener.current =
+        Notifications.addNotificationReceivedListener(notification => {
+          setNotification(notification)
+        })
+      responseListener.current =
+        Notifications.addNotificationResponseReceivedListener(response => {})
+      onSchedulePushNotification()
+    }
 
     return () => {
       notificationListener.current &&
@@ -274,6 +281,7 @@ export const DashboardScreen = ({ navigation, imageUrl }) => {
           <View style={styles.logoutButtonWrapper}>
             <Button
               mode="elevated"
+              style={stylesApp('buttonOpen')}
               onPress={() => navigation.navigate('Login')}>
               Logout
             </Button>
@@ -281,7 +289,7 @@ export const DashboardScreen = ({ navigation, imageUrl }) => {
           <View style={styles.chartWrapper}>
             {isLoadingChart ? (
               <View style={styles.indicatorChartWrapper}>
-                <ActivityIndicator size={50} animating={true} />
+                <ActivityIndicator size={50} />
               </View>
             ) : (
               <XAxisChart data={dataChart} />
